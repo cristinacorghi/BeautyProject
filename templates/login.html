@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>{{ title }}</h3>
+    <div class="sidenav">
+        <div class="login-main-text">
+            <h2>Ciao!</h2>
+            <p>Accedi per beneficiare di tutte le funzionalità del tuo Beauty Account</p>
+         </div>
+    </div>
+      <div class="main">
+         <div class="col-md-6 col-sm-12">
+            <div class="login-form">
+               <form action="{% url 'Accedi' %}" method="post" enctype="multipart/form-data">
+                   {% csrf_token %}
+                   {{ form.as_p }}
+                    <input type="submit" class="btn btn-secondary" value="Login" />
+               </form>
+            </div>
+         </div>
+      </div>
+{% endblock %}
