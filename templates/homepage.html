@@ -4,24 +4,60 @@
 {% block content %}
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Awesome Web Page Design - Easy Tutorials</title>
         <link rel="stylesheet"  href="{%  static  'css/homepage.css'  %}">
     </head>
     <body>
         <div id="hero">
-            <div class="navbar">
-                <img src="static/img/products/logo.png" class="logo">
-                <div class="user">
-                    <button type="button">Explore</button>
-                    <img src="static/img/products/user.png">
-                </div>
-            </div>
             <div class="container">
                 <div class="info">
                     <h1>DISCOVER</h1>
-                    <p>Testo testo testo testo</p>
+                    {% if user.is_authenticated %}
+                        <p>Hello {{ user.username }}!</p>
+                    {% endif %}
+                    <p>Scopri le nostre novità!</p>
                 </div>
             </div>
+            <div class="slider">
+                <i class="fas fa-arrow-circle-left" style="color: black;" id="prev"></i>
+                <div class="preview">
+                    <img src="static/img/products/Catharsis.png" class="active thumbnail">
+                    <img src="static/img/products/Chanel_Coco.jpg" class="thumbnail">
+                    <img src="static/img/products/Eau_de_toilette.png" class="thumbnail">
+                    <img src="static/img/products/1Million_PacoRabanne.jpg" class="thumbnail">
+                    <img src="static/img/products/JeanPaulGaultier.jpg" class="thumbnail">
+                </div>
+                <i class="fas fa-arrow-circle-right" style="color: black;" id="next"></i>
+            </div>
         </div>
+        <script>
+            var prev = document.getElementById("prev");
+            var next = document.getElementById("next");
+            var thumbnail = document.getElementsByClassName("thumbnail");
+            var hero = document.getElementById("hero");
+
+            var backgroundImg = ["static/img/products/Catharsis.png",
+                "static/img/products/Chanel_Coco.jpg",
+                "static/img/products/Eau_de_toilette.png",
+                "static/img/products/1Million_PacoRabanne.jpg",
+                "static/img/products/JeanPaulGaultier.jpg"];
+            let i=0;
+            next.onclick = function () {
+                if (i < 4) {
+                    hero.style.backgroundImage = 'url("' + backgroundImg[i + 1] + '")';
+                    thumbnail[i+1].classList.add("active");
+                    thumbnail[i].classList.remove("active");
+                    i++;
+                }
+            }
+            prev.onclick = function () {
+                if (i > 0) {
+                    hero.style.backgroundImage = 'url("' + backgroundImg[i - 1] + '")';
+                    thumbnail[i-1].classList.add("active");
+                    thumbnail[i].classList.remove("active");
+                    i--;
+                }
+            }
+
+        </script>
     </body>
 {% endblock %}

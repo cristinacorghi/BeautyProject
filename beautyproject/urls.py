@@ -23,4 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', views.login_view, name='Accedi'),
     path('register/', UserCreationView.as_view(), name='Registration'),
+    path('logout/', views.logout_view, name='Logout'),
+    path('profile/', views.Profile, name='Profile'),
+    path('search_bar/', views.SearchBar, name='SearchBar'),
 ]

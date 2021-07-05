@@ -9,6 +9,8 @@ from django.contrib.auth import (
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from forms.loginForm import UserLoginForm
+from forms.profileForm import ProfileForm
+from django.contrib.auth.models import User
 
 
 def Base(request):
@@ -36,6 +38,50 @@ class UserCreationView(CreateView):
     success_url = reverse_lazy('/')
 
 
+def Profile(request):
+    form = ProfileForm(request.POST or None)
+    title = 'profilo'
+
+    if form.is_valid():
+        fullName = form.cleaned_data.get('fullName')
+        email = form.cleaned_data.get('email')
+        mobilePhone = form.cleaned_data.get('mobilePhone')
+        address = form.cleaned_data.get('address')
+        print("sono il fullname -> " + fullName)
+        print("sono il email -> " + email)
+        print("sono il mobilePhone -> " + mobilePhone)
+        print("sono il address -> " + address)
+        '''
+        in questo modo estraggo univocamente l'utente
+        
+        ----> DA FARE:
+        - estrapolare attuale utente loggato, prenderne l'ID e estrarre tutti i suoi dati salvati nel db
+        filtrando l'oggetto user (qua sotto).
+        user = User.objects.filter(id="(id attuale loggato)")
+        '''
+
+        user = User.objects.filter(username="cristina")
+
+        '''in questo modo ho elencato tutti i campi dell'oggetto user'''
+        print(user.values_list())
+        '''a questo punto andare a modificare i campi estratti e memorizzare l'oggetto modificato nel db
+        sovrascrivendo quello vecchio (vedere su internet)'''
+
+    else:
+        print("sono il GET")
+    return render(request, 'profile.html', {'form': form, 'title': title})
+
+
 def logout_view(request):
     logout(request)
-    return redirect('/')
+    return render(request, 'logout.html')
+
+
+def SearchBar(request):
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        venues = Product.objects.filter(name__contains=searched)
+        return render(request, 'search_bar.html', {'searched': searched, 'venues': venues})
+        '''12:37'''
+    else:
+        return render(request, 'search_bar.html')

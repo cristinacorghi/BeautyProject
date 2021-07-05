@@ -7,6 +7,10 @@
     <link rel="stylesheet"  href="{%  static  'css/bootstrap-grid.css'  %}">
     <link rel="stylesheet"  href="{%  static  'css/bootstrap-reboot.css'  %}">
     <link rel="stylesheet"  href="{%  static  'css/custom.css'  %}">
+    <link rel="stylesheet"  href="{%  static  'css/profile.css'  %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+          crossorigin="anonymous">
     <title>BeautyStore</title>
 </head>
 <body>
@@ -25,18 +29,43 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="/login">Accedi</a>
               <a class="dropdown-item" href="/register">Registrati</a>
-              <a class="dropdown-item" href="#">I miei ordini</a>
-              <!--<div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>-->
+              {% if user.is_authenticated %}
+                <a class="dropdown-item" href="/profile">Profilo</a>
+              {% endif %}
             </div>
           </li>
           <li>
               <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">Carrello</a>
           </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profumi uomo</a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="#">Paco Rabanne</a>
+                  <a class="dropdown-item" href="#">Eau de Toilette</a>
+                  <a class="dropdown-item" href="#">Hermés</a>
+                  <a class="dropdown-item" href="#">Yves Saint Laurent</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profumi donna</a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="#">Chanel</a>
+                  <a class="dropdown-item" href="#">Eau de Parfum</a>
+            </div>
+          </li>
+          {% if user.is_authenticated %}
+            <li>
+              <a class="nav-link" href="logout/" role="button" aria-haspopup="true" aria-expanded="false">Logout</a>
+            </li>
+          {% endif %}
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+
+        <form class="form-inline my-2 my-lg-0" method=POST action="{% url 'SearchBar' %}">
+          {% csrf_token %}
+          <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" name="searched">
+          <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
     </nav>
