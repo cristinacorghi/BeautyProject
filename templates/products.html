@@ -1,13 +1,4 @@
 {% extends 'base.html' %}
 {% block content %}
-    <center>
-    {% if searched %}
-        {% for venue in venues %}
-            <a>{{ venue.name }} - {{ venue.price }}</a><br/>
-            <br>{{ venue.category }}
-            <br>{{ venue.description }}<br/>
-            <img src="../{{ venue.image }}" /><br>
-        {% endfor %}
-    {% endif %}
-    </center>
+
 {% endblock %}

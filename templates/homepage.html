@@ -6,58 +6,54 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet"  href="{%  static  'css/homepage.css'  %}">
     </head>
-    <body>
-        <div id="hero">
-            <div class="container">
-                <div class="info">
-                    <h1>DISCOVER</h1>
-                    {% if user.is_authenticated %}
-                        <p>Hello {{ user.username }}!</p>
-                    {% endif %}
-                    <p>Scopri le nostre novità!</p>
-                </div>
-            </div>
-            <div class="slider">
-                <i class="fas fa-arrow-circle-left" style="color: black;" id="prev"></i>
-                <div class="preview">
-                    <img src="static/img/products/Montale.png" class="active thumbnail">
-                    <img src="static/img/products/Versace_Eros_Eau_de_Toilette.jpg" class="thumbnail">
-                    <img src="static/img/products/narciso_rodriguez.jpg" class="thumbnail">
-                    <img src="static/img/products/Valentino_Eau_de_Parfum.jpg" class="thumbnail">
-                    <img src="static/img/products/Valentino_Eau_de_Parfum_uomo.jpg" class="thumbnail">
-                </div>
-                <i class="fas fa-arrow-circle-right" style="color: black;" id="next"></i>
-            </div>
+    <div class="container">
+        <div class="info">
+            <h1>DISCOVER</h1>
+            {% if user.is_authenticated %}
+                <p>Hello {{ user.username }}!</p>
+            {% endif %}
+            <p>Scopri le nostre novità!</p>
         </div>
-        <script>
-            var prev = document.getElementById("prev");
-            var next = document.getElementById("next");
-            var thumbnail = document.getElementsByClassName("thumbnail");
-            var hero = document.getElementById("hero");
+    </div>
+    <div class="slider">
+        <i class="fas fa-arrow-circle-left" style="color: black;" id="prev"></i>
+        <div class="preview">
+            <img src="static/img/products/Montale.png" class="active thumbnail">
+            <img src="static/img/products/Versace_Eros_Eau_de_Toilette.jpg" class="thumbnail">
+            <img src="static/img/products/narciso_rodriguez.jpg" class="thumbnail">
+            <img src="static/img/products/Valentino_Eau_de_Parfum.jpg" class="thumbnail">
+            <img src="static/img/products/Valentino_Eau_de_Parfum_uomo.jpg" class="thumbnail">
+        </div>
+        <i class="fas fa-arrow-circle-right" style="color: black;" id="next"></i>
+    </div>
+    <script>
+        var prev = document.getElementById("prev");
+        var next = document.getElementById("next");
+        var thumbnail = document.getElementsByClassName("thumbnail");
+        var hero = document.getElementById("hero");
 
-            var backgroundImg = ["static/img/products/Montale.png",
-                "static/img/products/Versace_Eros_Eau_de_Toilette.jpg",
-                "static/img/products/narciso_rodriguez.jpg",
-                "static/img/products/Valentino_Eau_de_Parfum.jpg",
-                "static/img/products/Valentino_Eau_de_Parfum_uomo.jpg"];
-            let i=0;
-            next.onclick = function () {
-                if (i < 4) {
-                    hero.style.backgroundImage = 'url("' + backgroundImg[i + 1] + '")';
-                    thumbnail[i+1].classList.add("active");
-                    thumbnail[i].classList.remove("active");
-                    i++;
-                }
+        var backgroundImg = ["static/img/products/Montale.png",
+            "static/img/products/Versace_Eros_Eau_de_Toilette.jpg",
+            "static/img/products/narciso_rodriguez.jpg",
+            "static/img/products/Valentino_Eau_de_Parfum.jpg",
+            "static/img/products/Valentino_Eau_de_Parfum_uomo.jpg"];
+        let i=0;
+        next.onclick = function () {
+            if (i < 4) {
+                hero.style.backgroundImage = 'url("' + backgroundImg[i + 1] + '")';
+                thumbnail[i+1].classList.add("active");
+                thumbnail[i].classList.remove("active");
+                i++;
             }
-            prev.onclick = function () {
-                if (i > 0) {
-                    hero.style.backgroundImage = 'url("' + backgroundImg[i - 1] + '")';
-                    thumbnail[i-1].classList.add("active");
-                    thumbnail[i].classList.remove("active");
-                    i--;
-                }
+        }
+        prev.onclick = function () {
+            if (i > 0) {
+                hero.style.backgroundImage = 'url("' + backgroundImg[i - 1] + '")';
+                thumbnail[i-1].classList.add("active");
+                thumbnail[i].classList.remove("active");
+                i--;
             }
+        }
 
-        </script>
-    </body>
+    </script>
 {% endblock %}

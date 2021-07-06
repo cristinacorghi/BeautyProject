@@ -81,7 +81,3 @@ def SearchBar(request):
         return render(request, 'search_bar.html', {'searched': searched, 'venues': venues})
     else:
         return render(request, 'search_bar.html')
-
-
-def Products(request):
-    return render(request, 'products.html')

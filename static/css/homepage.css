@@ -9,7 +9,7 @@
     height: 1100px;
     min-height: 100%;
     min-width: 1024px;
-    background-image: url(../img/products/Montale.png);
+    background-image: url(static/img/products/Montale.png);
     background-size: cover;
     background-position: center;
     position: fixed;
