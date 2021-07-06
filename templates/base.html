@@ -17,7 +17,9 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">BeautyStore</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -25,7 +27,8 @@
         <ul class="navbar-nav mr-auto">
 
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="/login">Accedi</a>
               <a class="dropdown-item" href="/register">Registrati</a>
@@ -35,36 +38,39 @@
             </div>
           </li>
           <li>
-              <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">Carrello</a>
+              <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                  Carrello</a>
           </li>
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profumi uomo</a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Paco Rabanne</a>
-                  <a class="dropdown-item" href="#">Eau de Toilette</a>
                   <a class="dropdown-item" href="#">Hermés</a>
-                  <a class="dropdown-item" href="#">Yves Saint Laurent</a>
+                  <a class="dropdown-item" href="#">Versace Eros</a>
+                  <a class="dropdown-item" href="#">Valentino</a>
             </div>
           </li>
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profumi donna</a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Chanel</a>
-                  <a class="dropdown-item" href="#">Eau de Parfum</a>
+                  <a class="dropdown-item" href="#">Montale</a>
+                  <a class="dropdown-item" href="#">Valentino</a>
+                  <a class="dropdown-item" href="#">Narciso Rodriguez</a>
             </div>
           </li>
           {% if user.is_authenticated %}
             <li>
-              <a class="nav-link" href="logout/" role="button" aria-haspopup="true" aria-expanded="false">Logout</a>
+              <a class="nav-link" href="logout/" role="button" aria-haspopup="true"
+                 aria-expanded="false">Logout</a>
             </li>
           {% endif %}
         </ul>
 
         <form class="form-inline my-2 my-lg-0" method=POST action="{% url 'SearchBar' %}">
           {% csrf_token %}
-          <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" name="searched">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search"
+                 name="searched">
           <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>

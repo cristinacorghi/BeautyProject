@@ -11,6 +11,7 @@ from django.views.generic import CreateView
 from forms.loginForm import UserLoginForm
 from forms.profileForm import ProfileForm
 from django.contrib.auth.models import User
+from Store.models.product import Product
 
 
 def Base(request):
@@ -35,7 +36,7 @@ def login_view(request):
 class UserCreationView(CreateView):
     form_class = UserCreationForm
     template_name = 'register.html'
-    success_url = reverse_lazy('/')
+    success_url = reverse_lazy('Base')
 
 
 def Profile(request):
@@ -47,10 +48,6 @@ def Profile(request):
         email = form.cleaned_data.get('email')
         mobilePhone = form.cleaned_data.get('mobilePhone')
         address = form.cleaned_data.get('address')
-        print("sono il fullname -> " + fullName)
-        print("sono il email -> " + email)
-        print("sono il mobilePhone -> " + mobilePhone)
-        print("sono il address -> " + address)
         '''
         in questo modo estraggo univocamente l'utente
         
@@ -82,6 +79,9 @@ def SearchBar(request):
         searched = request.POST['searched']
         venues = Product.objects.filter(name__contains=searched)
         return render(request, 'search_bar.html', {'searched': searched, 'venues': venues})
-        '''12:37'''
     else:
         return render(request, 'search_bar.html')
+
+
+def Products(request):
+    return render(request, 'products.html')

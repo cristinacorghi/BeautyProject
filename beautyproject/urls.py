@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 from .views import UserCreationView
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('', views.Base, name='Base'),
@@ -26,4 +28,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='Logout'),
     path('profile/', views.Profile, name='Profile'),
     path('search_bar/', views.SearchBar, name='SearchBar'),
-]
+    path('search_bar/products/', views.Products, name='Products'),
+] + static(settings.STATIC_URL)
