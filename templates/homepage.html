@@ -2,29 +2,29 @@
 {% load static %}
 
 {% block content %}
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet"  href="{%  static  'css/homepage.css'  %}">
-    </head>
-    <div class="container">
-        <div class="info">
-            <h1>DISCOVER</h1>
-            {% if user.is_authenticated %}
-                <p>Hello {{ user.username }}!</p>
-            {% endif %}
-            <p>Scopri le nostre novità!</p>
+    <div id="hero">
+
+        <div class="container">
+            <div class="info">
+                <h1>DISCOVER</h1>
+                {% if user.is_authenticated %}
+                    <p>Hello {{ user.username }}!</p>
+                {% endif %}
+                <p>Scopri le nostre novità!</p>
+            </div>
         </div>
-    </div>
-    <div class="slider">
-        <i class="fas fa-arrow-circle-left" style="color: black;" id="prev"></i>
-        <div class="preview">
-            <img src="static/img/products/Montale.png" class="active thumbnail">
-            <img src="static/img/products/Versace_Eros_Eau_de_Toilette.jpg" class="thumbnail">
-            <img src="static/img/products/narciso_rodriguez.jpg" class="thumbnail">
-            <img src="static/img/products/Valentino_Eau_de_Parfum.jpg" class="thumbnail">
-            <img src="static/img/products/Valentino_Eau_de_Parfum_uomo.jpg" class="thumbnail">
+
+        <div class="slider">
+            <i class="fas fa-arrow-circle-left" style="color: black;" id="prev"></i>
+            <div class="preview">
+                <img src="static/img/products/Montale.png" class="active thumbnail" alt="">
+                <img src="static/img/products/Hermes_Terre_Hermes.jpg" class="thumbnail">
+                <img src="static/img/products/Narciso_Rodriguez.jpg" class="thumbnail">
+                <img src="static/img/products/Valentino_Eau_de_Parfum.jpg" class="thumbnail">
+                <img src="static/img/products/Valentino_Eau_de_Parfum_uomo.jpg" class="thumbnail">
+            </div>
+            <i class="fas fa-arrow-circle-right" style="color: black;" id="next"></i>
         </div>
-        <i class="fas fa-arrow-circle-right" style="color: black;" id="next"></i>
     </div>
     <script>
         var prev = document.getElementById("prev");
@@ -33,8 +33,8 @@
         var hero = document.getElementById("hero");
 
         var backgroundImg = ["static/img/products/Montale.png",
-            "static/img/products/Versace_Eros_Eau_de_Toilette.jpg",
-            "static/img/products/narciso_rodriguez.jpg",
+            "static/img/products/Hermes_Terre_Hermes.jpg",
+            "static/img/products/Narciso_Rodriguez.jpg",
             "static/img/products/Valentino_Eau_de_Parfum.jpg",
             "static/img/products/Valentino_Eau_de_Parfum_uomo.jpg"];
         let i=0;

@@ -12,6 +12,7 @@ from forms.loginForm import UserLoginForm
 from forms.profileForm import ProfileForm
 from django.contrib.auth.models import User
 from Store.models.product import Product
+from django.views import generic
 
 
 def Base(request):
@@ -81,3 +82,12 @@ def SearchBar(request):
         return render(request, 'search_bar.html', {'searched': searched, 'venues': venues})
     else:
         return render(request, 'search_bar.html')
+
+
+class Products(generic.ListView):
+    model = Product
+    template_name = 'products.html'
+
+    def get(self, request, id):
+        id = request.GET.get('id', '')
+    obj = Product.objects.filter(id)

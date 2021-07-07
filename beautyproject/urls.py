@@ -28,4 +28,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='Logout'),
     path('profile/', views.Profile, name='Profile'),
     path('search_bar/', views.SearchBar, name='SearchBar'),
+    path('search_bar/<int:pk>/products', views.Products, name='Products'),
 ] + static(settings.STATIC_URL)
