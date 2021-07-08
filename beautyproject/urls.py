@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import UserCreationView
+from .views import UserCreationView, ProductList
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -28,5 +28,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='Logout'),
     path('profile/', views.Profile, name='Profile'),
     path('search_bar/', views.SearchBar, name='SearchBar'),
-    path('search_bar/<int:pk>/products', views.Products, name='Products'),
+    path('search_bar/<int:pk>/products_list/', ProductList.as_view(), name='ProductList'),
 ] + static(settings.STATIC_URL)

@@ -7,12 +7,12 @@ from django.contrib.auth import (
     logout,
 )
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from forms.loginForm import UserLoginForm
 from forms.profileForm import ProfileForm
 from django.contrib.auth.models import User
 from Store.models.product import Product
-from django.views import generic
+from django.contrib.auth.forms import UserChangeForm
 
 
 def Base(request):
@@ -41,6 +41,18 @@ class UserCreationView(CreateView):
 
 
 def Profile(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('')
+    else:
+        form = UserChangeForm(instance=request.user)
+        args = {'form': form}
+        return render(request, 'profile.html', args)
+
+
+'''def Profile(request):
     form = ProfileForm(request.POST or None)
     title = 'profilo'
 
@@ -49,25 +61,25 @@ def Profile(request):
         email = form.cleaned_data.get('email')
         mobilePhone = form.cleaned_data.get('mobilePhone')
         address = form.cleaned_data.get('address')
-        '''
+
         in questo modo estraggo univocamente l'utente
         
         ----> DA FARE:
         - estrapolare attuale utente loggato, prenderne l'ID e estrarre tutti i suoi dati salvati nel db
         filtrando l'oggetto user (qua sotto).
         user = User.objects.filter(id="(id attuale loggato)")
-        '''
+
 
         user = User.objects.filter(username="cristina")
 
-        '''in questo modo ho elencato tutti i campi dell'oggetto user'''
+        in questo modo ho elencato tutti i campi dell'oggetto user
         print(user.values_list())
-        '''a questo punto andare a modificare i campi estratti e memorizzare l'oggetto modificato nel db
-        sovrascrivendo quello vecchio (vedere su internet)'''
+        a questo punto andare a modificare i campi estratti e memorizzare l'oggetto modificato nel db
+        sovrascrivendo quello vecchio (vedere su internet)
 
     else:
         print("sono il GET")
-    return render(request, 'profile.html', {'form': form, 'title': title})
+    return render(request, 'profile.html', {'form': form, 'title': title})'''
 
 
 def logout_view(request):
@@ -84,10 +96,6 @@ def SearchBar(request):
         return render(request, 'search_bar.html')
 
 
-class Products(generic.ListView):
+class ProductList(DetailView):
     model = Product
     template_name = 'products.html'
-
-    def get(self, request, id):
-        id = request.GET.get('id', '')
-    obj = Product.objects.filter(id)

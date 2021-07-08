@@ -14,38 +14,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <form action="{% url 'Profile' %}" method="post" enctype="multipart/form-data">
-                           {% csrf_token %}
-                           {{ form.as_p }}
-                            <input type="submit" class="btn btn-secondary" value="Modifica" />
-                       </form>
-                        <!--
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Full Name</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="">
-                            </div>
-                        </div>
-                        -->
-                        <hr>
-                        <div class="row">
-                            <div class="col-6">
-                                <a class="btn btn-info " target="__blank"
-                                   href="https://www.bootdey.com/snippets/view/profile-edit-
-                                   data-and-skills">Edit</a>
-                            </div>
-                            <div class="col-6">
-                                <button class="btn btn-outline-primary">My Orders</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
+
+        <div class="container">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+            <br>
         </div>
     </div>
 {% endblock %}

@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{ obj.name }}</h1>
-    <h2>{{ obj.price }}</h2>
-    <p>{{ obj.description }}</p>
-    <img src="../{{ obj.image }}" /><br>
+    <center>
+    <h1>{{ object.name }}</h1>
+    <h3>€{{ object.price }}</h3>
+    <p>{{ object.description }}</p>
+    <img src="../../../{{ object.image }}" />
+    </center>
 {% endblock %}
