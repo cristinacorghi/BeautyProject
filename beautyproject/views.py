@@ -9,10 +9,10 @@ from django.contrib.auth import (
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 from forms.loginForm import UserLoginForm
-from forms.profileForm import ProfileForm
+from forms.profileForm import ProfileForm, EditProfileForm
 from django.contrib.auth.models import User
 from Store.models.product import Product
-from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 
 
 def Base(request):
@@ -42,44 +42,14 @@ class UserCreationView(CreateView):
 
 def Profile(request):
     if request.method == 'POST':
-        form = UserChangeForm(request.POST, instance=request.user)
+        form = EditProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('Base')
     else:
-        form = UserChangeForm(instance=request.user)
+        form = EditProfileForm(instance=request.user)
         args = {'form': form}
         return render(request, 'profile.html', args)
-
-
-'''def Profile(request):
-    form = ProfileForm(request.POST or None)
-    title = 'profilo'
-
-    if form.is_valid():
-        fullName = form.cleaned_data.get('fullName')
-        email = form.cleaned_data.get('email')
-        mobilePhone = form.cleaned_data.get('mobilePhone')
-        address = form.cleaned_data.get('address')
-
-        in questo modo estraggo univocamente l'utente
-        
-        ----> DA FARE:
-        - estrapolare attuale utente loggato, prenderne l'ID e estrarre tutti i suoi dati salvati nel db
-        filtrando l'oggetto user (qua sotto).
-        user = User.objects.filter(id="(id attuale loggato)")
-
-
-        user = User.objects.filter(username="cristina")
-
-        in questo modo ho elencato tutti i campi dell'oggetto user
-        print(user.values_list())
-        a questo punto andare a modificare i campi estratti e memorizzare l'oggetto modificato nel db
-        sovrascrivendo quello vecchio (vedere su internet)
-
-    else:
-        print("sono il GET")
-    return render(request, 'profile.html', {'form': form, 'title': title})'''
 
 
 def logout_view(request):
@@ -99,3 +69,17 @@ def SearchBar(request):
 class ProductList(DetailView):
     model = Product
     template_name = 'products.html'
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            return redirect('Profile')
+
+    else:
+        form = PasswordChangeForm(instance=request.user)
+        args = {'form': form}
+        return render(request, 'change_password.html', args)
