@@ -29,5 +29,4 @@ urlpatterns = [
     path('profile/', views.Profile, name='Profile'),
     path('search_bar/', views.SearchBar, name='SearchBar'),
     path('search_bar/<int:pk>/products_list/', ProductList.as_view(), name='ProductList'),
-    path('change-password/', views.change_password, name='change_password'),
 ] + static(settings.STATIC_URL)

@@ -9,10 +9,11 @@ from django.contrib.auth import (
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 from forms.loginForm import UserLoginForm
-from forms.profileForm import ProfileForm, EditProfileForm
+from forms.profileForm import EditProfileForm
 from django.contrib.auth.models import User
 from Store.models.product import Product
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 def Base(request):
@@ -69,17 +70,3 @@ def SearchBar(request):
 class ProductList(DetailView):
     model = Product
     template_name = 'products.html'
-
-
-def change_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.POST, instance=request.user)
-
-        if form.is_valid():
-            form.save()
-            return redirect('Profile')
-
-    else:
-        form = PasswordChangeForm(instance=request.user)
-        args = {'form': form}
-        return render(request, 'change_password.html', args)
