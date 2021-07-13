@@ -45,22 +45,15 @@
           </li>
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profumi uomo</a>
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search for...</a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="">Hermés</a>
-                  <a class="dropdown-item" href="#">Versace Eros</a>
-                  <a class="dropdown-item" href="#">Valentino</a>
+                  <a class="dropdown-item" href="brand/">Brand</a>
+                  <a class="dropdown-item" href="price/">Price</a>
+                  <a class="dropdown-item" href="men_perfumes/">Men's perfumes</a>
+                  <a class="dropdown-item" href="#">Women's perfumes</a>
               </div>
           </li>
-          <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profumi donna</a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Montale</a>
-                  <a class="dropdown-item" href="#">Valentino</a>
-                  <a class="dropdown-item" href="#">Narciso Rodriguez</a>
-            </div>
-          </li>
+
           {% if user.is_authenticated %}
             <li>
               <a class="nav-link" href="logout/" role="button" aria-haspopup="true"

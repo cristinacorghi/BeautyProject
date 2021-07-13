@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <center>
+    <h1>Men's Perfumes</h1>
+    {% for product in object_list %}
+        {% if {{ product.category }} == Men's %}
+        <a href="{% url 'ProductList' product.id %}">{{ product.name }} - {{ product.category }}</a><br>
+    {% endfor %}
+    </center>
+{% endblock %}

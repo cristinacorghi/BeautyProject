@@ -7,13 +7,14 @@ from django.contrib.auth import (
     logout,
 )
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, ListView
 from forms.loginForm import UserLoginForm
 from forms.profileForm import EditProfileForm
 from django.contrib.auth.models import User
 from Store.models.product import Product
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from django.db.models import Min, Max
 
 
 def Base(request):
@@ -70,3 +71,19 @@ def SearchBar(request):
 class ProductList(DetailView):
     model = Product
     template_name = 'products.html'
+
+
+class BrandList(ListView):
+    model = Product
+    template_name = 'brand.html'
+
+
+def price(request):
+    minMaxPrice = Product.objects.aggregate(Min('price'), Max('price'))
+    data = {'minMaxPrice': minMaxPrice}
+    return render(request, 'price.html', data)
+
+
+class MenPerfumes(ListView):
+    model = Product
+    template_name = 'men_perfumes.html'
