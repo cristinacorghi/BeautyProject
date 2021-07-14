@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models.product import Product
+from .models.product import Product, ProductReview
 from .models.category import Category
 
 
@@ -13,3 +13,4 @@ class AdminCategory(admin.ModelAdmin):
 
 admin.site.register(Product, AdminProduct)
 admin.site.register(Category, AdminCategory)
+admin.site.register(ProductReview)

@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import UserCreationView, ProductList, BrandList, MenPerfumes
+from .views import UserCreationView, ProductList, BrandList, MenPerfumes, WomenPerfumes
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -32,4 +32,5 @@ urlpatterns = [
     path('brand/', BrandList.as_view(), name='brand-list'),
     path('price/', views.price, name='price'),
     path('men_perfumes/', MenPerfumes.as_view(), name='men-perfumes'),
+    path('women_perfumes/', WomenPerfumes.as_view(), name='women-perfumes'),
 ] + static(settings.STATIC_URL)

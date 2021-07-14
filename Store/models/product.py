@@ -1,5 +1,6 @@
 from django.db import models
 from .category import Category
+from django.contrib.auth.models import User
 
 
 class Product(models.Model):
@@ -12,3 +13,15 @@ class Product(models.Model):
     @staticmethod
     def get_all_products():
         return Product.objects.all()
+
+    def get_rating(self):
+        total = sum(int(review['stars']) for review in self.reviews.values())
+        return total / self.reviews.count()
+
+
+class ProductReview(models.Model):
+    product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='reviews', on_delete=models.CASCADE)
+    content = models.TextField(blank=True, null=True)
+    stars = models.IntegerField()
+    date_added = models.DateTimeField(auto_now_add=True)

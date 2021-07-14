@@ -11,7 +11,7 @@ from django.views.generic import CreateView, DetailView, ListView
 from forms.loginForm import UserLoginForm
 from forms.profileForm import EditProfileForm
 from django.contrib.auth.models import User
-from Store.models.product import Product
+from Store.models.product import Product, ProductReview
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Min, Max
@@ -72,6 +72,14 @@ class ProductList(DetailView):
     model = Product
     template_name = 'products.html'
 
+    def product_detail(self, request, category_slug, slug):
+        product = get_object_or_404(Product, slug)
+        if request.method == 'POST' and request.user.is_authenticate:
+            stars = request.POST.get('stars', 3)
+            content = request.POST.get('content', '')
+            review = ProductReview.objects.create(product=product, user=request.user, stars=stars, content=content)
+            return redirect('product-detail', category_slug=category_slug, slug=slug)
+
 
 class BrandList(ListView):
     model = Product
@@ -87,3 +95,8 @@ def price(request):
 class MenPerfumes(ListView):
     model = Product
     template_name = 'men_perfumes.html'
+
+
+class WomenPerfumes(ListView):
+    model = Product
+    template_name = 'women_perfumes.html'
