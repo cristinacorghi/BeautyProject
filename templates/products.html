@@ -3,12 +3,13 @@
 {% block content %}
     <center>
     <h1>{{ object.name }}</h1>
-    <h3>€{{ object.price }}</h3>
+    <h3>€{{ object.price }}, Stars: {% if product.get_rating == 0 %}No rating yet{% else %}{{ product.get_rating|floatformat:1 }}{% endif %}</h3>
     <p>{{ object.description }}</p>
     <img src="../../../{{ object.image }}" />
 
+    <hr>
     <h2 class="subtitle">Reviews</h2>
-    <div class="reviews-wrapper">
+    <div class="newsletter-wrapper notification">
         {% for review in product.reviews.all %}
             <div class="notification space-below">
                 <p>
@@ -26,12 +27,12 @@
 
     <div class="notification space-below">
         {% if user.is_authenticated %}
-            <form method="post" action=".">
+            <form action="" method="post">
                 {% csrf_token %}
                 <div class="field">
                     <label>Stars</label>
-                    <div class="control">
-                        <div class="select">
+                    <div class="form-control">
+                        <div class="selected">
                             <select name="stars">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -45,14 +46,16 @@
 
                 <div class="field">
                     <label>Content</label>
-                    <div class="control">
-                        <textarea class="textarea" name="content"></textarea>
+                    <div class="form-control">
+                        <label>
+                            <textarea class="md-textarea form-control" name="content"></textarea>
+                        </label>
                     </div>
                 </div>
 
                 <div class="field">
-                    <div class="control">
-                        <button class="button is-success">Submit</button>
+                    <div class="form-control">
+                        <input type="submit" class="btn btn-secondary" value="Submit" />
                     </div>
                 </div>
             </form>

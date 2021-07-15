@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import (
     authenticate,
     get_user_model,
@@ -9,6 +9,7 @@ from django.contrib.auth import (
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView
 from forms.loginForm import UserLoginForm
+from forms.reviewForm import ReviewForm
 from forms.profileForm import EditProfileForm
 from django.contrib.auth.models import User
 from Store.models.product import Product, ProductReview
@@ -73,12 +74,17 @@ class ProductList(DetailView):
     template_name = 'products.html'
 
     def product_detail(self, request, category_slug, slug):
-        product = get_object_or_404(Product, slug)
-        if request.method == 'POST' and request.user.is_authenticate:
-            stars = request.POST.get('stars', 3)
-            content = request.POST.get('content', '')
-            review = ProductReview.objects.create(product=product, user=request.user, stars=stars, content=content)
-            return redirect('product-detail', category_slug=category_slug, slug=slug)
+        product = get_object_or_404(Product, slug=slug)
+        if request.method == 'POST' and user.is_authenticated:
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                stars = request.POST.get('stars', 3)
+                content = request.POST.get('content', '')
+                review = ProductReview.objects.create(product=product, user=request.user, stars=stars, content=content)
+                return redirect(request, 'products.html', category_slug=category_slug, slug=slug)
+            else:
+                form = ReviewForm()
+                return render(request, 'products.html')
 
 
 class BrandList(ListView):
