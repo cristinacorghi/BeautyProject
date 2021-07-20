@@ -46,9 +46,11 @@ class UserCreationView(CreateView):
 def Profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
+
         if form.is_valid():
             form.save()
             return redirect('Base')
+
     else:
         form = EditProfileForm(instance=request.user)
         args = {'form': form}
@@ -69,22 +71,19 @@ def SearchBar(request):
         return render(request, 'search_bar.html')
 
 
+def product_detail(request):
+    if request.method == 'POST' and user.is_authenticated:
+        stars = request.POST.get('stars', 3)
+        content = request.POST.get('content', '')
+        review = ProductReview.objects.create(product=product, user=request.user, stars=stars, content=content)
+        return redirect('product_detail')
+    else:
+        return redirect('product_detail')
+
+
 class ProductList(DetailView):
     model = Product
     template_name = 'products.html'
-
-    def product_detail(self, request, category_slug, slug):
-        product = get_object_or_404(Product, slug=slug)
-        if request.method == 'POST' and user.is_authenticated:
-            form = ReviewForm(request.POST)
-            if form.is_valid():
-                stars = request.POST.get('stars', 3)
-                content = request.POST.get('content', '')
-                review = ProductReview.objects.create(product=product, user=request.user, stars=stars, content=content)
-                return redirect(request, 'products.html', category_slug=category_slug, slug=slug)
-            else:
-                form = ReviewForm()
-                return render(request, 'products.html')
 
 
 class BrandList(ListView):

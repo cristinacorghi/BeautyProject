@@ -3,13 +3,13 @@
 {% block content %}
     <center>
     <h1>{{ object.name }}</h1>
-    <h3>€{{ object.price }}, Stars: {% if product.get_rating == 0 %}No rating yet{% else %}{{ product.get_rating|floatformat:1 }}{% endif %}</h3>
+    <h3>€{{ object.price }}, Stars: {% if product.get_rating == 0 %}No ratings yet{% else %}{{ product.get_rating|floatformat:1 }}{% endif %}</h3>
     <p>{{ object.description }}</p>
     <img src="../../../{{ object.image }}" />
 
     <hr>
     <h2 class="subtitle">Reviews</h2>
-    <div class="newsletter-wrapper notification">
+    <div class="reviews-wrapper">
         {% for review in product.reviews.all %}
             <div class="notification space-below">
                 <p>
@@ -27,12 +27,12 @@
 
     <div class="notification space-below">
         {% if user.is_authenticated %}
-            <form action="" method="post">
+            <form method="post" action=".">
                 {% csrf_token %}
                 <div class="field">
                     <label>Stars</label>
-                    <div class="form-control">
-                        <div class="selected">
+                    <div class="control">
+                        <div class="select">
                             <select name="stars">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -46,16 +46,14 @@
 
                 <div class="field">
                     <label>Content</label>
-                    <div class="form-control">
-                        <label>
-                            <textarea class="md-textarea form-control" name="content"></textarea>
-                        </label>
+                    <div class="control">
+                        <textarea class="textarea" name="content"></textarea>
                     </div>
                 </div>
 
                 <div class="field">
-                    <div class="form-control">
-                        <input type="submit" class="btn btn-secondary" value="Submit" />
+                    <div class="control">
+                        <button class="button is-success">Submit</button>
                     </div>
                 </div>
             </form>

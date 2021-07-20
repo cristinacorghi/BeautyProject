@@ -1,6 +1,7 @@
 from django.db import models
 from .category import Category
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Product(models.Model):
@@ -27,4 +28,4 @@ class ProductReview(models.Model):
     user = models.ForeignKey(User, related_name='reviews', on_delete=models.CASCADE)
     content = models.TextField(blank=True, null=True)
     stars = models.IntegerField()
-    date_added = models.DateTimeField(auto_now_add=True)
+    date_added = models.DateTimeField(default=timezone.now)
