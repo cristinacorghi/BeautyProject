@@ -33,17 +33,19 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/login">Accedi</a>
-              <a class="dropdown-item" href="/register">Registrati</a>
+              <a class="dropdown-item" href="/login">Log in</a>
+              <a class="dropdown-item" href="/register">Sign in</a>
               {% if user.is_authenticated %}
-                <a class="dropdown-item" href="/profile">Profilo</a>
+                <a class="dropdown-item" href="/profile">Profile</a>
               {% endif %}
             </div>
           </li>
-          <li>
-              <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                  Carrello</a>
-          </li>
+          {% if user.is_authenticated %}
+              <li>
+                  <a class="nav-link" href="cart/" role="button" aria-haspopup="true" aria-expanded="false">
+                      Cart</a>
+              </li>
+          {% endif %}
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search for...</a>
@@ -79,6 +81,7 @@
          <script src="{% static 'js/jquery.min.js' %}"></script>
          <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
          <script src="{% static 'js/bootstrap.js' %}"></script>
+         <script src="{% static 'js/product_filter.js' %}"></script>
     </footer>
 </body>
 </html>

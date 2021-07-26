@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+<script type="text/javascript" src="{% static 'js/product_filter.js' %}"></script>
 
 {% block content %}
     <center>
@@ -14,8 +16,9 @@
             Max: <input type="number" value="{{ minMaxPrice.price__min }}"
                         min={{ minMaxPrice.price__min }} max={{ minMaxPrice.price__max }}
                         class="form-control" id="maxPrice" onkeyup="rangeInput.value=this.value">
-            <button class="btn btn-info btn-sm mt-1">Apply</button>
+            <button id="priceFilterBtn" class="btn btn-info btn-sm mt-1">Apply</button>
         </li>
     </div>
     </center>
+    <div id="filteredProducts"></div>
 {% endblock %}

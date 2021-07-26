@@ -1,5 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
+from django.template.loader import render_to_string
 from django.contrib.auth import (
     authenticate,
     get_user_model,
@@ -16,6 +18,8 @@ from Store.models.product import Product, ProductReview
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Min, Max
+from django.http import JsonResponse
+from django.template import RequestContext
 
 
 def Base(request):
@@ -93,8 +97,21 @@ class BrandList(ListView):
 
 def price(request):
     minMaxPrice = Product.objects.aggregate(Min('price'), Max('price'))
-    data = {'minMaxPrice': minMaxPrice}
+    # {'price__min': 49, 'price__max': 124}
+    allProducts = Product.objects.all().order_by('-id').distinct()
+    allProducts = allProducts.filter(price__gte=minMaxPrice['price__min'])
+    allProducts = allProducts.filter(price__lte=minMaxPrice['price__max'])
+    data = {'minMaxPrice': minMaxPrice, 'allProducts': allProducts}
     return render(request, 'price.html', data)
+
+
+def filter_price(request):
+    minPrice = request.GET['minPrice']
+    maxPrice = request.GET['maxPrice']
+    filtered_products = Product.objects.filter(price__gte=minPrice).filter(price__lte=maxPrice).distinct()
+    # filtered_products = serializers.serialize('json', filtered_products)
+    t = render_to_string('ajax/filtered_products_price.html', {'data': filtered_products})
+    return JsonResponse({'data': t})
 
 
 class MenPerfumes(ListView):

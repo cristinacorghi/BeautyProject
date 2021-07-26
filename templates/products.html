@@ -6,6 +6,11 @@
     <h3>€{{ object.price }}, Stars: {% if product.get_rating == 0 %}No ratings yet{% else %}{{ product.get_rating|floatformat:1 }}{% endif %}</h3>
     <p>{{ object.description }}</p>
     <img src="../../../{{ object.image }}" />
+    <form action="{% url "cart_add" object.id %}" method="post">
+        {{ cart_product_form }}
+        {% csrf_token %}
+        <input type="submit" value="Add to cart">
+    </form>
 
     <hr>
     <h2 class="subtitle">Reviews</h2>

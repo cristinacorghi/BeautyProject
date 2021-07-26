@@ -32,6 +32,7 @@ urlpatterns = [
     path('search_bar/<int:pk>/products_list/', views.product_detail, name='ProductReview'),
     path('brand/', BrandList.as_view(), name='brand-list'),
     path('price/', views.price, name='price'),
+    path('ajax_filter_price/', views.filter_price, name='filter-price'),
     path('men_perfumes/', MenPerfumes.as_view(), name='men-perfumes'),
     path('women_perfumes/', WomenPerfumes.as_view(), name='women-perfumes'),
 ] + static(settings.STATIC_URL)
