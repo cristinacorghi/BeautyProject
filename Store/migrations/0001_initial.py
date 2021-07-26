@@ -17,30 +17,36 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False,
+                                           verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
             name='Product',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False,
+                                           verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('price', models.IntegerField(default=0)),
                 ('description', models.CharField(default='', max_length=500)),
                 ('image', models.ImageField(upload_to='static/img/products')),
-                ('category', models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='Store.category')),
+                ('category', models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE,
+                                               to='Store.category')),
             ],
         ),
         migrations.CreateModel(
             name='ProductReview',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False,
+                                           verbose_name='ID')),
                 ('content', models.TextField(blank=True, null=True)),
                 ('stars', models.IntegerField()),
                 ('date_added', models.DateTimeField(auto_now_add=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='Store.product')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to=settings.AUTH_USER_MODEL)),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                              related_name='reviews', to='Store.product')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                           related_name='reviews', to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

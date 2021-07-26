@@ -2,9 +2,11 @@
         {% for product in data %}
             <div class="col-6 mb-4 product-box">
                 <div class="card shadow">
-                  <img src="../../../{{ product.image }}" style="width: 200px; height: 200px;" class="card-img-top">
+                  <img src="../../../{{ product.image }}" style="width: 200px; height: 200px;"
+                       class="card-img-top">
                   <div class="card-body">
-                    <h5 class="card-text"><a href="{% url 'ProductList' product.id %}">{{ product.name }}</a></h5>
+                    <h5 class="card-text"><a href="{% url 'ProductList' product.id %}">{{ product.name }}
+                    </a></h5>
                     <h6>${{ product.price }}</h6>
                   </div>
                   <div class="card-footer">

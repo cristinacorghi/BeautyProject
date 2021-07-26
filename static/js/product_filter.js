@@ -7,13 +7,6 @@ $(document).ready(function(){
 		var _maxPrice=$('#maxPrice').val();
 		_filterObj.minPrice=_minPrice;
 		_filterObj.maxPrice=_maxPrice;
-		/*$(".filter-checkbox").each(function(index,el){
-			var _filterVal=$(this).val();
-			var _filterKey=$(this).data('filter');
-			_filterObj[_filterKey]=Array.from(document.querySelectorAll('input[data-filter='+_filterKey+']:checked')).map(function(el){
-			 	return el.value;
-			});
-		});*/
 
 		// Run Ajax
 		$.ajax({

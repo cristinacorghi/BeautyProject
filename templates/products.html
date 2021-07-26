@@ -3,14 +3,10 @@
 {% block content %}
     <center>
     <h1>{{ object.name }}</h1>
-    <h3>€{{ object.price }}, Stars: {% if product.get_rating == 0 %}No ratings yet{% else %}{{ product.get_rating|floatformat:1 }}{% endif %}</h3>
+    <h3>€{{ object.price }}, Stars: {% if product.get_rating == 0 %}No ratings yet{% else %}
+        {{ product.get_rating|floatformat:1 }}{% endif %}</h3>
     <p>{{ object.description }}</p>
     <img src="../../../{{ object.image }}" />
-    <form action="{% url "cart_add" object.id %}" method="post">
-        {{ cart_product_form }}
-        {% csrf_token %}
-        <input type="submit" value="Add to cart">
-    </form>
 
     <hr>
     <h2 class="subtitle">Reviews</h2>
@@ -19,7 +15,8 @@
             <div class="notification space-below">
                 <p>
                     <strong>Date: </strong>{{ review.date_added|date:"Y-m-d" }},
-                    <strong>Stars: </strong>{{ review.stars }}
+                    <strong>Stars: </strong>{{ review.stars }} <br>
+                    <strong>User: </strong>{{ review.user }}
                 </p>
                 {{ review.content }}
             </div>
@@ -32,7 +29,7 @@
 
     <div class="notification space-below">
         {% if user.is_authenticated %}
-            <form method="post" action=".">
+            <form method="post" action="{% url 'ProductReview' product.id %}">
                 {% csrf_token %}
                 <div class="field">
                     <label>Stars</label>

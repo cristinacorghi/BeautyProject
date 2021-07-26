@@ -22,10 +22,12 @@ from django.http import JsonResponse
 from django.template import RequestContext
 
 
+# homepage
 def Base(request):
     return render(request, 'homepage.html')
 
 
+# log in
 def login_view(request):
     next = request.GET.get('next')
     title = 'Login'
@@ -41,12 +43,14 @@ def login_view(request):
     return render(request, 'login.html', {'form': form, 'title': title})
 
 
+# sign in
 class UserCreationView(CreateView):
     form_class = UserCreationForm
     template_name = 'register.html'
     success_url = reverse_lazy('Base')
 
 
+# profile
 def Profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
@@ -61,11 +65,13 @@ def Profile(request):
         return render(request, 'profile.html', args)
 
 
+# logout
 def logout_view(request):
     logout(request)
     return render(request, 'logout.html')
 
 
+# search bar
 def SearchBar(request):
     if request.method == 'POST':
         searched = request.POST['searched']
@@ -75,26 +81,32 @@ def SearchBar(request):
         return render(request, 'search_bar.html')
 
 
-def product_detail(request):
-    if request.method == 'POST' and user.is_authenticated:
+# reviews
+def product_review(request, id):
+    if request.method == 'POST' and request.user.is_authenticated:
         stars = request.POST.get('stars', 3)
         content = request.POST.get('content', '')
-        review = ProductReview.objects.create(product=product, user=request.user, stars=stars, content=content)
-        return redirect('product_detail')
+        product = Product.objects.get(id=id)
+        review = ProductReview.objects.create(product=product, user=request.user, stars=stars,
+                                              content=content)
+        return render(request, 'review_added.html')
     else:
-        return redirect('product_detail')
+        return render(request, 'review_added.html')
 
 
+# view dei prodotti
 class ProductList(DetailView):
     model = Product
     template_name = 'products.html'
 
 
+# view dei brand
 class BrandList(ListView):
     model = Product
     template_name = 'brand.html'
 
 
+# price
 def price(request):
     minMaxPrice = Product.objects.aggregate(Min('price'), Max('price'))
     # {'price__min': 49, 'price__max': 124}
@@ -105,20 +117,22 @@ def price(request):
     return render(request, 'price.html', data)
 
 
+# prezzi filtrati
 def filter_price(request):
     minPrice = request.GET['minPrice']
     maxPrice = request.GET['maxPrice']
     filtered_products = Product.objects.filter(price__gte=minPrice).filter(price__lte=maxPrice).distinct()
-    # filtered_products = serializers.serialize('json', filtered_products)
     t = render_to_string('ajax/filtered_products_price.html', {'data': filtered_products})
     return JsonResponse({'data': t})
 
 
+# men's perfumes
 class MenPerfumes(ListView):
     model = Product
     template_name = 'men_perfumes.html'
 
 
+# women's perfumes
 class WomenPerfumes(ListView):
     model = Product
     template_name = 'women_perfumes.html'
