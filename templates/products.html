@@ -6,7 +6,8 @@
     <h3>€{{ object.price }}, Stars: {% if product.get_rating == 0 %}No ratings yet{% else %}
         {{ product.get_rating|floatformat:1 }}{% endif %}</h3>
     <p>{{ object.description }}</p>
-    <img src="../../../{{ object.image }}" />
+    <img src="../../../{{ object.image }}" /> <br>
+    <a href="/../../../cart/" class="pull-right">Add to Cart</a>
 
     <hr>
     <h2 class="subtitle">Reviews</h2>

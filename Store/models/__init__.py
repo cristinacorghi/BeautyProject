@@ -1,2 +1,2 @@
-from .product import Product
-from .category import Category
+from .productModel import Product
+from .categoryModel import Category

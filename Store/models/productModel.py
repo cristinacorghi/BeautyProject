@@ -1,5 +1,5 @@
 from django.db import models
-from .category import Category
+from .categoryModel import Category
 from django.contrib.auth.models import User
 from django.utils import timezone
 

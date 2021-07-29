@@ -14,7 +14,7 @@ from forms.loginForm import UserLoginForm
 from forms.reviewForm import ReviewForm
 from forms.profileForm import EditProfileForm
 from django.contrib.auth.models import User
-from Store.models.product import Product, ProductReview
+from Store.models.productModel import Product, ProductReview
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Min, Max
@@ -136,3 +136,45 @@ class MenPerfumes(ListView):
 class WomenPerfumes(ListView):
     model = Product
     template_name = 'women_perfumes.html'
+
+
+# cart
+def update_cart(request, slug):
+    request.session.set_expiry(120000)
+    try:
+        the_id = request.session['cart_id']
+    except:
+        new_cart = Cart()
+        new_cart.save()
+        request.session['cart_id'] = new_cart.id
+        the_id = new_cart.id
+
+    cart = Cart.objects.get(id=the_id)
+
+    try:
+        product = Product.objects.get(slug=slug)
+    except Product.DoesNotExist:
+        pass
+    except:
+        pass
+
+    # ("model object", "true/false")
+    cart_item, created = CartItem.objects.get_or_create(product=product)
+    if created:
+        print("yeah")
+
+    if not cart_item in cart.items.all():
+        cart.items.add(cart_item)
+    else:
+        cart.items.remove(cart_item)
+
+    new_total = 0.00
+    for item in cart.items.all():
+        line_total = float(item.product.price) * item.quantity
+        new_total += line_total
+
+    request.session['items_total'] = cart.items.count()
+    cart.total = new_total
+    cart.save()
+
+    return HttpResponseRedirect(reverse("cart"))

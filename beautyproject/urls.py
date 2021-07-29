@@ -19,6 +19,8 @@ from . import views
 from .views import *
 from django.conf.urls.static import static
 from django.conf import settings
+from carts.views import *
+import carts
 
 urlpatterns = [
     path('', views.Base, name='Base'),
@@ -35,4 +37,5 @@ urlpatterns = [
     path('ajax_filter_price/', views.filter_price, name='filter-price'),
     path('men_perfumes/', MenPerfumes.as_view(), name='men-perfumes'),
     path('women_perfumes/', WomenPerfumes.as_view(), name='women-perfumes'),
+    path('cart/', carts.views.cart_view, name='cart_view'),
 ] + static(settings.STATIC_URL)
