@@ -7,7 +7,10 @@
         {{ product.get_rating|floatformat:1 }}{% endif %}</h3>
     <p>{{ object.description }}</p>
     <img src="../../../{{ object.image }}" /> <br>
-    <a href="/../../../cart/" class="pull-right">Add to Cart</a>
+    {% if user.is_authenticated %}
+        <form method="GET" action="{% url "update_cart" product.id %}"></form>   <!-- 9:16 -->
+        <a href="{% url "update_cart" product.id %}" class="pull-right">Add to Cart</a>
+    {% endif %}
 
     <hr>
     <h2 class="subtitle">Reviews</h2>

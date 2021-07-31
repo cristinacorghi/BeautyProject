@@ -16,14 +16,16 @@
                     <tr>
                         <td></td>
                         <td></td>
-                        <td>Total: {{ cart.total }}</td>
+                        <td>Total: €{{ cart.total }}</td>
                     </tr>
                 </tfoot>
-                {% for item in cart.items.all %}
-                    <tr><td>{{ item.product }}</td><td>{{ item.product.price }}</td>
-                        <td>{{ item.quantity }}</td><td><a href="{% url "update_cart" item.product.id %}">Remove</a></tr>
+                {% for item in cart.cartitem_set.all %}
+                    <tr><td>{{ item.product.name }}</td><td>€{{ item.product.price }}</td>
+                        <td>{{ item.quantity }}</td><td><a href="{% url "update_cart" item.product.id %}">
+                            Remove</a></tr>
                 {% endfor %}
             </table>
         {% endif %}
+        <button type="button" class="btn">Vai al pagamento</button>
     </div>
 {% endblock %}

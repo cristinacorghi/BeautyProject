@@ -42,8 +42,10 @@
           </li>
           {% if user.is_authenticated %}
               <li>
-                  <a class="nav-link" href="cart/" role="button" aria-haspopup="true" aria-expanded="false">
-                      Cart</a>
+                  <a class="nav-link" href="{% url 'cart_view' %}" role="button" aria-haspopup="true"
+                     aria-expanded="false">
+                      Cart <span class="badge">{% if not request.session.items_total %} 0 {% else %}
+                      {{ request.session.items_total }} {% endif %}</span></a>
               </li>
           {% endif %}
           <li class="nav-item dropdown">

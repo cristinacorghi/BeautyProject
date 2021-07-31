@@ -38,4 +38,5 @@ urlpatterns = [
     path('men_perfumes/', MenPerfumes.as_view(), name='men-perfumes'),
     path('women_perfumes/', WomenPerfumes.as_view(), name='women-perfumes'),
     path('cart/', carts.views.cart_view, name='cart_view'),
+    path('cart/<int:pk>/', carts.views.update_cart, name='update_cart'),
 ] + static(settings.STATIC_URL)
