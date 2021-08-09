@@ -21,8 +21,7 @@
                 </tfoot>
                 {% for item in cart.cartitem_set.all %}
                     <tr><td>{{ item.product.name }}</td><td>€{{ item.product.price }}</td>
-                        <td>{{ item.quantity }}</td><td><a href="{% url "update_cart" item.product.id %}">
-                            Remove</a></tr>
+                        <td>{{ item.quantity }}</td><td><a href="#">Remove</a></tr>
                 {% endfor %}
             </table>
         {% endif %}

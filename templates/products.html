@@ -8,8 +8,13 @@
     <p>{{ object.description }}</p>
     <img src="../../../{{ object.image }}" /> <br>
     {% if user.is_authenticated %}
-        <form method="GET" action="{% url "update_cart" product.id %}"></form>   <!-- 9:16 -->
-        <a href="{% url "update_cart" product.id %}" class="pull-right">Add to Cart</a>
+        <div class="col-sm-4 pull-right">
+            <form class="form" method="POST" action="{% url "update_cart" product.id %}">
+                {% csrf_token %}
+                <input class="form-control" name="qty" type="number" value="1">
+                <input class="btn btn-default btn-block" type="submit" value="Add to cart">
+            </form>
+        </div>
     {% endif %}
 
     <hr>
