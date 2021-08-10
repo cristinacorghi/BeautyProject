@@ -38,5 +38,6 @@ urlpatterns = [
     path('men_perfumes/', MenPerfumes.as_view(), name='men-perfumes'),
     path('women_perfumes/', WomenPerfumes.as_view(), name='women-perfumes'),
     path('cart/', carts.views.cart_view, name='cart_view'),
-    path('cart/<int:pk>/', carts.views.add_to_cart, name='update_cart'),
+    path('cart/<int:pk>/', carts.views.add_to_cart, name='AddToCart'),
+    path('cart/(?P<id>\d+)/$', carts.views.remove_from_cart, name='remove_from_cart'),
 ] + static(settings.STATIC_URL)

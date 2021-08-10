@@ -1,5 +1,6 @@
 from django.db import models
 from Store.models.productModel import Product
+from django.contrib.auth.models import User
 
 
 class CartItem(models.Model):
