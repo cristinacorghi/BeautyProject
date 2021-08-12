@@ -26,3 +26,16 @@ class Cart(models.Model):
 
     def __unicode__(self):
         return "Cart id: %s" % self.id
+
+
+class Payment(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=300)
+    phone_number = models.IntegerField(default=123456789)
+    address = models.CharField(max_length=500)
+    city = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.first_name
+

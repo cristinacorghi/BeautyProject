@@ -27,11 +27,28 @@
             </table>
 
         <h1>Procedi al pagamento</h1>
-        <form method="POST" class="form-group">
+        <form method="POST" class="form-group" action="{% url 'success_payment' %}">
             {% csrf_token %}
-            {{ form.as_p }}
+            <label for="fname">First name:</label>
+            <input type="text" id="fname" name="fname"><br><br>
+
+            <label for="fname">Last name:</label>
+            <input type="text" id="fname" name="fname"><br><br>
+
+            <label for="fname">Email:</label>
+            <input type="text" id="fname" name="fname"><br><br>
+
+            <label for="fname">Phone number:</label>
+            <input type="text" id="fname" name="fname"><br><br>
+
+            <label for="fname">Address:</label>
+            <input type="text" id="fname" name="fname"><br><br>
+
+            <label for="fname">City:</label>
+            <input type="text" id="fname" name="fname"><br><br>
+
             <button type="submit" class="btn btn-success">Pay</button>
         </form>
-        {% endif %}
+    {% endif %}
     </div>
 {% endblock %}

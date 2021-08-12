@@ -83,15 +83,26 @@ def remove_from_cart(request, id):
 
 
 def payment_view(request):
-    print("sono qui")
-    if request.method == 'POST':
-        form = PaymentForm(request.POST, instance=request.user)
+    form = PaymentForm(request.POST or None)
+    if form.is_valid():
+        first_name = form.cleaned_data.get('first_name')
+        last_name = form.cleaned_data.get('last_name')
+        email = form.cleaned_data.get('email')
+        phone_number = form.cleaned_data.get('phone_number')
+        address = form.cleaned_data.get('address')
+        city = form.cleaned_data.get('city')
+    '''if request.method == 'POST' and request.user.is_authenticated:
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        payment = Payment.objects.create(user=request.user, first_name=first_name, last_name=last_name,
+                                         email=email, phone_number=phone_number, address=address, city=city)
+        context = {'payment': payment}'''
+    return render(request, 'cart.html', {'form': form})
 
-        if form.is_valid():
-            form.save()
-            return redirect('Base')
 
-    else:
-        form = PaymentForm(instance=request.user)
-        args = {'form': form}
-        return render(request, 'homepage.html', args)
+def success_payment(request):
+    return render(request, 'success_payment.html')
