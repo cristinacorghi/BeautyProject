@@ -14,13 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .views import *
 from django.conf.urls.static import static
 from django.conf import settings
-from carts.views import *
-import carts
 
 urlpatterns = [
     path('', views.Base, name='Base'),
@@ -37,9 +35,9 @@ urlpatterns = [
     path('ajax_filter_price/', views.filter_price, name='filter-price'),
     path('men_perfumes/', MenPerfumes.as_view(), name='men-perfumes'),
     path('women_perfumes/', WomenPerfumes.as_view(), name='women-perfumes'),
-    path('cart/', carts.views.cart_view, name='cart_view'),
-    path('cart/', carts.views.payment_view, name='payment'),
-    path('cart/success_payment/', carts.views.success_payment, name='success_payment'),
-    path('cart/<int:pk>/', carts.views.add_to_cart, name='AddToCart'),
-    path('cart/(<int:id>)/', carts.views.remove_from_cart, name='remove_from_cart'),
-] + static(settings.STATIC_URL)
+    path('recommended_products/', views.recommended_products_view, name='recommended-products'),
+    path('', include('carts.urls')),
+    path('avatar/', include('avatar.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# static(settings.STATIC_URL)

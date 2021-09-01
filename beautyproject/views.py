@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView
 from forms.loginForm import UserLoginForm
 from forms.reviewForm import ReviewForm
-from forms.profileForm import EditProfileForm
+from forms.profileForm import EditProfileForm, ProfilePicForm
 from django.contrib.auth.models import User
 from Store.models.productModel import Product, ProductReview
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
@@ -50,19 +50,23 @@ class UserCreationView(CreateView):
     success_url = reverse_lazy('Base')
 
 
-# profile
 def Profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
+        profile_pic_form = ProfilePicForm(request.POST, request.FILES, instance=request.user)
 
-        if form.is_valid():
+        if form.is_valid() and profile_pic_form.is_valid():
             form.save()
+            profile_pic_form.save()
             return redirect('Base')
 
     else:
         form = EditProfileForm(instance=request.user)
-        args = {'form': form}
-        return render(request, 'profile.html', args)
+        profile_pic_form = ProfilePicForm(instance=request.user)
+        username = request.user.get_username()
+        user = User.objects.get(username=username)
+        context = {'form': form, 'profile_pic_form': profile_pic_form}
+        return render(request, 'profile.html', context)
 
 
 # logout
@@ -136,3 +140,20 @@ class MenPerfumes(ListView):
 class WomenPerfumes(ListView):
     model = Product
     template_name = 'women_perfumes.html'
+
+
+def recommended_products_view(request):
+    model = ProductReview
+    template_name = 'recommended_products.html'
+    # products = ProductReview.objects.all()
+    # star_list = []
+    # for item in products:
+    # for item.stars in products:
+    # total = 0
+    # total = (total+item.stars)/2
+    # star_list.append(total)
+    #  total_score = total_score + item.stars
+    #  dict_total_score = [].append(total_score)
+    queryset = ProductReview.objects.order_by('-stars')[:5]
+    context = {'queryset': queryset}
+    return render(request, template_name, context)

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from Store.models.productModel import Product
 from django.contrib.auth.models import User
 
@@ -28,14 +29,10 @@ class Cart(models.Model):
         return "Cart id: %s" % self.id
 
 
-class Payment(models.Model):
+class CustomerPayment(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=300)
-    phone_number = models.IntegerField(default=123456789)
-    address = models.CharField(max_length=500)
+    email = models.EmailField(blank=True)
+    phone = models.IntegerField()
+    address = models.CharField(max_length=300)
     city = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.first_name
-

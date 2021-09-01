@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <center>
+    <h1>Your favorite perfumes</h1>
+    {% for x in queryset %}
+        <a>{{ x.product.name }} - {% if x.product.get_rating == 0 %}0.0{% else %}
+            {{ x.product.get_rating|floatformat:1 }}{% endif %}</a><br>
+        <img src="../../../{{ x.product.image }}" /> <br>
+    {% endfor %}
+    </center>
+{% endblock %}

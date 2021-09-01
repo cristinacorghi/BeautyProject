@@ -1,7 +1,8 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
+from django.views.generic import ListView
 from Store.models.productModel import Product
-from forms.paymentForm import PaymentForm
+from .forms import CustomerPaymentForm
 from .models import *
 
 
@@ -11,8 +12,13 @@ def cart_view(request):
         cart = Cart.objects.get(id=the_id)
     except:
         the_id = None
-    if the_id:
-        new_total = 0.00
+
+    if the_id is None:
+        empty_message = "Your cart is empty, please keep shopping"
+        context = {"empty": True, 'empty_message': empty_message}
+
+    else:
+        new_total = 0.00  # prezzo totale
         for item in cart.cartitem_set.all():
             line_total = float(item.product.price) * item.quantity
             new_total += line_total
@@ -21,9 +27,7 @@ def cart_view(request):
         cart.total = new_total
         cart.save()
         context = {"cart": cart}
-    else:
-        empty_message = "Your cart is empty, please keep shopping"
-        context = {"empty": True, 'empty_message': empty_message}
+
     template = "cart.html"
     return render(request, template, context)
 
@@ -63,9 +67,9 @@ def add_to_cart(request, pk):
 
         # request.session['item'] = cart_item.id
 
-        return HttpResponseRedirect(reverse("cart_view"))
+        return HttpResponseRedirect(reverse("carts:cart_view"))
 
-    return HttpResponseRedirect(reverse("cart_view"))
+    return HttpResponseRedirect(reverse("carts:cart_view"))
 
 
 def remove_from_cart(request, id):
@@ -73,35 +77,33 @@ def remove_from_cart(request, id):
         the_id = request.session['cart_id']
         cart = Cart.objects.get(id=the_id)
     except:
-        return HttpResponseRedirect(reverse("cart_view"))
+        the_id = None
+
+        return HttpResponseRedirect(reverse("carts:cart_view"))
 
     cartitem = CartItem.objects.get(id=id)
     cartitem.delete()
-    # cartitem.cart = None
-    # cartitem.save()
-    return HttpResponseRedirect(reverse("cart_view"))
+    return HttpResponseRedirect(reverse("carts:cart_view"))
 
 
-def payment_view(request):
-    form = PaymentForm(request.POST or None)
-    if form.is_valid():
-        first_name = form.cleaned_data.get('first_name')
-        last_name = form.cleaned_data.get('last_name')
-        email = form.cleaned_data.get('email')
-        phone_number = form.cleaned_data.get('phone_number')
-        address = form.cleaned_data.get('address')
-        city = form.cleaned_data.get('city')
-    '''if request.method == 'POST' and request.user.is_authenticated:
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        phone_number = request.POST.get('phone_number')
-        address = request.POST.get('address')
-        city = request.POST.get('city')
-        payment = Payment.objects.create(user=request.user, first_name=first_name, last_name=last_name,
-                                         email=email, phone_number=phone_number, address=address, city=city)
-        context = {'payment': payment}'''
-    return render(request, 'cart.html', {'form': form})
+def customer_payment(request):
+    if request.method == 'POST':
+        form = CustomerPaymentForm(request.POST)
+
+        if not form.is_valid():
+            return render(request, 'payment.html', {'form': form})
+
+        else:
+            form.save()
+            cartitem = CartItem.objects.all()
+            cartitem.delete()
+            request.session['items_total'] = 0
+            template = "success_payment.html"
+            context = {"empty": True, 'form': form, 'cartitem': cartitem}
+            return render(request, template, context)
+
+    form = CustomerPaymentForm()
+    return render(request, 'payment.html', {'form': form})
 
 
 def success_payment(request):

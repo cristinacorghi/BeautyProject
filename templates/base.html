@@ -42,7 +42,7 @@
           </li>
           {% if user.is_authenticated %}
               <li>
-                  <a class="nav-link" href="{% url 'cart_view' %}" role="button" aria-haspopup="true"
+                  <a class="nav-link" href="{% url 'carts:cart_view' %}" role="button" aria-haspopup="true"
                      aria-expanded="false">
                       Cart <span class="badge">{% if not request.session.items_total %} 0 {% else %}
                       {{ request.session.items_total }} {% endif %}</span></a>
@@ -65,6 +65,10 @@
                  aria-expanded="false">Logout</a>
             </li>
           {% endif %}
+            <li>
+              <a class="nav-link" href="recommended_products/" role="button" aria-haspopup="true"
+                 aria-expanded="false">Your favorites</a>
+            </li>
         </ul>
 
         <form class="form-inline my-2 my-lg-0" method=POST action="{% url 'SearchBar' %}">
