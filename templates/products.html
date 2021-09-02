@@ -16,6 +16,11 @@
                 <input class="btn btn-default btn-block" type="submit" value="Add to cart">
             </form>
         </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            To make purchases you need to log in. If you are not registered, register <a
+                href="{% url 'Registration' %}">here</a>.
+        </div>
     {% endif %}
 
     <hr>

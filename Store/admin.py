@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models.productModel import Product, ProductReview
 from .models.categoryModel import Category
-from .models.userModel import Profile
 
 
 class AdminProduct(admin.ModelAdmin):
@@ -15,4 +14,3 @@ class AdminCategory(admin.ModelAdmin):
 admin.site.register(Product, AdminProduct)
 admin.site.register(Category, AdminCategory)
 admin.site.register(ProductReview)
-admin.site.register(Profile)
