@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm
+from forms.registerForm import UserForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string
@@ -44,10 +44,22 @@ def login_view(request):
 
 
 # sign in
-class UserCreationView(CreateView):
+def register(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('Base')
+    else:
+        form = UserForm()
+
+    return render(request, 'register.html', {'form': form})
+
+
+'''class UserCreationView(CreateView):
     form_class = UserCreationForm
     template_name = 'register.html'
-    success_url = reverse_lazy('Base')
+    success_url = reverse_lazy('Base')'''
 
 
 def Profile(request):
