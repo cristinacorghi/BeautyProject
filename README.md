@@ -19,6 +19,17 @@ Sito web per la vendita di profumi.
 'django-admin startapp Store'
 'django-admin startapp carts'
 ---
+E' necessario, prima dell'avvio dell'applicazione, avere installato sul sistema (o nel virtualenv creato appositamente per il sito) i seguenti pacchetti:
+* asgiref==3.4.1
+* Django==3.2.7
+* django-appconf==1.0.4
+* django-avatar==5.0.0
+* django-crispy-forms==1.12.0
+* Pillow==8.3.2
+* pytz==2021.1
+* six==1.16.0
+* sqlparse==0.4.1
+
 Versione di Python utilizzata:
 * Python 3.8.10
 # Run Project
