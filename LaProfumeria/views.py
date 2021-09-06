@@ -56,12 +56,6 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 
-'''class UserCreationView(CreateView):
-    form_class = UserCreationForm
-    template_name = 'register.html'
-    success_url = reverse_lazy('Base')'''
-
-
 def Profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
