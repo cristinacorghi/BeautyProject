@@ -12,7 +12,6 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView
 from forms.loginForm import UserLoginForm
 from forms.reviewForm import ReviewForm
-# from forms.profileForm import EditProfileForm
 from django.contrib.auth.models import User
 from Store.models.productModel import Product, ProductReview
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
@@ -92,22 +91,6 @@ class ProfileView(View):
         else:
             messages.error(request, form_validation_error(form))
         return redirect('profile')
-
-
-'''def Profile(request):
-    if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
-
-        if form.is_valid():
-            form.save()
-            return redirect('Base')
-
-    else:
-        form = EditProfileForm(instance=request.user)
-        username = request.user.get_username()
-        user = User.objects.get(username=username)
-        context = {'form': form}
-        return render(request, 'profile.html', context)'''
 
 
 # logout
