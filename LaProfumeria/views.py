@@ -31,6 +31,11 @@ from django.utils.decorators import method_decorator
 
 # homepage
 def Base(request):
+    lista_profumi = Product.objects.all()
+    recensioni = ProductReview.objects.all()
+    profumi_estrapolati = []
+    while len(profumi_estrapolati) < 5:
+        profumi_estrapolati.append(lista_profumi[num])
     return render(request, 'homepage.html')
 
 

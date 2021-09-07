@@ -23,7 +23,6 @@ E' necessario, prima dell'avvio dell'applicazione, avere installato sul sistema 
 * asgiref==3.4.1
 * Django==3.2.7
 * django-appconf==1.0.4
-* django-avatar==5.0.0
 * django-crispy-forms==1.12.0
 * Pillow==8.3.2
 * pytz==2021.1
