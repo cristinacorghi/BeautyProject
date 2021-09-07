@@ -26,7 +26,8 @@ urlpatterns = [
     path('login/', views.login_view, name='Accedi'),
     path('register/', views.register, name='Registration'),
     path('logout/', views.logout_view, name='Logout'),
-    path('profile/', views.Profile, name='Profile'),
+    path('profile/', views.ProfileView.as_view(), name='profile'),
+    # path('profile/', views.Profile, name='Profile'),
     path('search_bar/', views.SearchBar, name='SearchBar'),
     path('search_bar/<int:pk>/products_list/', ProductList.as_view(), name='ProductList'),
     path('review_added/<int:id>', views.product_review, name='ProductReview'),
@@ -38,6 +39,13 @@ urlpatterns = [
     path('recommended_products/', views.recommended_products_view, name='recommended-products'),
     path('', include('carts.urls')),
     path('avatar/', include('avatar.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# to support and show media & static files in developer mode
+if settings.DEVEL:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # static(settings.STATIC_URL)

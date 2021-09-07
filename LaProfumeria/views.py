@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView
 from forms.loginForm import UserLoginForm
 from forms.reviewForm import ReviewForm
-from forms.profileForm import EditProfileForm
+# from forms.profileForm import EditProfileForm
 from django.contrib.auth.models import User
 from Store.models.productModel import Product, ProductReview
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
@@ -20,6 +20,14 @@ from django.contrib.auth import update_session_auth_hash
 from django.db.models import Min, Max
 from django.http import JsonResponse
 from django.template import RequestContext
+
+from django.contrib import messages  # import messages to show flash message in your page
+from forms.profileForm import ProfileForm, \
+    form_validation_error  # import the used form and related function to show errors
+from Store.models.profileModel import Profile  # import the Profile Model
+from django.views.generic import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 # homepage
@@ -56,7 +64,37 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 
-def Profile(request):
+@method_decorator(login_required(login_url='login'), name='dispatch')
+class ProfileView(View):
+    profile = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.profile, __ = Profile.objects.get_or_create(user=request.user)
+        return super(ProfileView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request):
+        context = {'profile': self.profile}
+        return render(request, 'profile.html', context)
+
+    def post(self, request):
+        form = ProfileForm(request.POST, request.FILES, instance=self.profile)
+
+        if form.is_valid():
+            profile = form.save()
+
+            # to save user model info
+            profile.user.first_name = form.cleaned_data.get('first_name')
+            profile.user.last_name = form.cleaned_data.get('last_name')
+            profile.user.email = form.cleaned_data.get('email')
+            profile.user.save()
+
+            messages.success(request, 'Profile saved successfully')
+        else:
+            messages.error(request, form_validation_error(form))
+        return redirect('profile')
+
+
+'''def Profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
 
@@ -69,7 +107,7 @@ def Profile(request):
         username = request.user.get_username()
         user = User.objects.get(username=username)
         context = {'form': form}
-        return render(request, 'profile.html', context)
+        return render(request, 'profile.html', context)'''
 
 
 # logout
