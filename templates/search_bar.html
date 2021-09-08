@@ -7,7 +7,7 @@
             <h1>You searched for {{ searched }}</h1>
             <br/>
             {% for venue in venues %}
-                <a href="{% url 'ProductList' venue.id %}"}>{{ venue.name }} - {{ venue.category }}</a><br/>
+                <a href="{% url 'Store:ProductList' venue.id %}"}>{{ venue.name }} - {{ venue.category }}</a><br/>
                 <img src="../{{ venue.image }}" /><br>
             {% endfor %}
         {% else %}

@@ -19,7 +19,7 @@
     {% else %}
         <div class="alert alert-info" role="alert">
             To make purchases you need to log in. If you are not registered, register <a
-                href="{% url 'Registration' %}">here</a>.
+                href="{% url 'Store:Registration' %}">here</a>.
         </div>
     {% endif %}
 
@@ -44,7 +44,7 @@
 
     <div class="notification space-below">
         {% if user.is_authenticated %}
-            <form method="post" action="{% url 'ProductReview' product.id %}">
+            <form method="post" action="{% url 'Store:ProductReview' product.id %}">
                 {% csrf_token %}
                 <div class="field">
                     <label>Stars</label>

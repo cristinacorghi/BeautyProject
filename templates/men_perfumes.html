@@ -5,7 +5,7 @@
     <h1>Men's Perfumes</h1>
     {% for product in object_list %}
         {% if product.category.id == 2 %}
-        <a href="{% url 'ProductList' product.id %}">{{ product.name }} - {{ product.category }}</a><br>
+        <a href="{% url 'Store:ProductList' product.id %}">{{ product.name }} - {{ product.category }}</a><br>
         <img height=30% width=30% src="../../../{{ product.image }}" /> <br>
         {% endif %}
     {% endfor %}

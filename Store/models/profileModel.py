@@ -5,8 +5,6 @@ from django.templatetags.static import static
 
 
 class Profile(models.Model):
-
-    # Managed fields
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to="static/img/avatars/", null=True, blank=True)
     phone = models.CharField(max_length=32, null=True, blank=True)

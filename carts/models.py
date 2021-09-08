@@ -21,7 +21,6 @@ class CartItem(models.Model):
 class Cart(models.Model):
     # prezzo totale
     total = models.DecimalField(max_digits=100, decimal_places=2, default=0.00)
-    active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return "Cart id: %s" % self.id

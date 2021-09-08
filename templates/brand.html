@@ -4,7 +4,7 @@
     <center>
     <h1>Brands</h1>
     {% for product in object_list %}
-        <a href="{% url 'ProductList' product.id %}">{{ product.name }}</a><br>
+        <a href="{% url 'Store:ProductList' product.id %}">{{ product.name }}</a><br>
     {% endfor %}
     </center>
 {% endblock %}

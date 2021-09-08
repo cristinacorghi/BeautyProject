@@ -78,7 +78,6 @@ def remove_from_cart(request, id):
         cart = Cart.objects.get(id=the_id)
     except:
         the_id = None
-
         return HttpResponseRedirect(reverse("carts:cart_view"))
 
     cartitem = CartItem.objects.get(id=id)
