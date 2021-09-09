@@ -11,6 +11,9 @@ class Product(models.Model):
     description = models.CharField(max_length=500, default='')
     image = models.ImageField(upload_to='static/img/products')
 
+    class Meta:
+        verbose_name_plural = 'Product'
+
     @staticmethod
     def get_all_products():
         return Product.objects.all()
@@ -29,3 +32,6 @@ class ProductReview(models.Model):
     content = models.TextField(blank=True, null=True)
     stars = models.IntegerField()
     date_added = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name_plural = 'ProductReview'

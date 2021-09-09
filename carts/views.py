@@ -1,6 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import ListView
 from Store.models.productModel import Product
 from .forms import CustomerPaymentForm
 from .models import *

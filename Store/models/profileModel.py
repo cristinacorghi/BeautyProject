@@ -10,8 +10,7 @@ class Profile(models.Model):
     phone = models.CharField(max_length=32, null=True, blank=True)
 
     class Meta:
-        verbose_name = _('Profile')
-        verbose_name_plural = _('Profiles')
+        verbose_name_plural = 'Profile'  # serve per togliere la "s" finale nel model
 
     @property
     def get_avatar(self):

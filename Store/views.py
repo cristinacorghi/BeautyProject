@@ -57,7 +57,10 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 
-@method_decorator(login_required(login_url='login'), name='dispatch')
+@method_decorator(login_required(login_url='login'),
+                  name='dispatch')  # login_required controlla che l'utente corrente sia loggato.
+                                    # dispatch() → metodo presente in tutte le class-based view che si occupa di
+                                    # gestire le request e le response.
 class ProfileView(View):
     profile = None
 
@@ -116,13 +119,13 @@ def product_review(request, id):
         return render(request, 'review_added.html')
 
 
-# view dei prodotti
+# class-based view dei prodotti
 class ProductList(DetailView):
     model = Product
     template_name = 'products.html'
 
 
-# view dei brand
+# class-based view dei brand
 class BrandList(ListView):
     model = Product
     template_name = 'brand.html'
@@ -130,7 +133,8 @@ class BrandList(ListView):
 
 # price
 def price(request):
-    minMaxPrice = Product.objects.aggregate(Min('price'), Max('price'))  # dizionario che contiene il prezzo minimo e massimo tra tutti i profumi
+    minMaxPrice = Product.objects.aggregate(Min('price'),
+                                            Max('price'))  # dizionario che contiene il prezzo minimo e massimo tra tutti i profumi
     allProducts = Product.objects.all().order_by('-id').distinct()  # tutti i profumi ordinati per id decrescente
     allProducts = allProducts.filter(price__gte=minMaxPrice['price__min'])
     allProducts = allProducts.filter(price__lte=minMaxPrice['price__max'])
@@ -142,18 +146,20 @@ def price(request):
 def filter_price(request):
     minPrice = request.GET['minPrice']  # prezzo minimo
     maxPrice = request.GET['maxPrice']  # prezzo massimo impostato da interfaccia
-    filtered_products = Product.objects.filter(price__gte=minPrice).filter(price__lte=maxPrice).distinct()  # tutti i profumi dal prezzo minimo al prezzo massimo
-    t = render_to_string('ajax/filtered_products_price.html', {'data': filtered_products})  # pagina html di ogni profumo filtrato
+    filtered_products = Product.objects.filter(price__gte=minPrice).filter(
+        price__lte=maxPrice).distinct()  # tutti i profumi dal prezzo minimo al prezzo massimo
+    t = render_to_string('ajax/filtered_products_price.html',
+                         {'data': filtered_products})  # pagina html di ogni profumo filtrato
     return JsonResponse({'data': t})
 
 
-# men's perfumes
+# class-based view dei profumi da uomo
 class MenPerfumes(ListView):
     model = Product
     template_name = 'men_perfumes.html'
 
 
-# women's perfumes
+# class-based view dei profumi da donna
 class WomenPerfumes(ListView):
     model = Product
     template_name = 'women_perfumes.html'
