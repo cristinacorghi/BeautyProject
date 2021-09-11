@@ -1,6 +1,5 @@
 from forms.registerForm import UserForm
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_POST
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.contrib.auth import (
     authenticate,
@@ -8,24 +7,21 @@ from django.contrib.auth import (
     login,
     logout,
 )
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import DetailView, ListView
 from forms.loginForm import UserLoginForm
 from forms.reviewForm import ReviewForm
 from django.contrib.auth.models import User
-from Store.models.productModel import Product, ProductReview
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
+from Store.models.productModel import Product, ProductReview, CustomerOrders
 from django.db.models import Min, Max
 from django.http import JsonResponse
-from django.template import RequestContext
-from django.contrib import messages  # import messages to show flash message in your page
+from django.contrib import messages  # import messages to show flash message
 from forms.profileForm import ProfileForm, \
     form_validation_error  # import the used form and related function to show errors
-from Store.models.profileModel import Profile  # import the Profile Model
+from Store.models.profileModel import Profile
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+import math
 
 
 # log in
@@ -44,7 +40,7 @@ def login_view(request):
     return render(request, 'login.html', {'form': form, 'title': title})
 
 
-# sign in
+# sign up
 def register(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -77,17 +73,17 @@ class ProfileView(View):
 
         if form.is_valid():
             profile = form.save()
-
             # to save user model info
             profile.user.first_name = form.cleaned_data.get('first_name')
             profile.user.last_name = form.cleaned_data.get('last_name')
             profile.user.email = form.cleaned_data.get('email')
+            profile.phone = form.cleaned_data.get('phone')
             profile.user.save()
 
             messages.success(request, 'Profile saved successfully')
         else:
             messages.error(request, form_validation_error(form))
-        return redirect('profile')
+        return redirect('Store:profile')
 
 
 # logout
@@ -125,12 +121,6 @@ class ProductList(DetailView):
     template_name = 'products.html'
 
 
-# class-based view dei brand
-class BrandList(ListView):
-    model = Product
-    template_name = 'brand.html'
-
-
 # price
 def price(request):
     minMaxPrice = Product.objects.aggregate(Min('price'),
@@ -165,18 +155,56 @@ class WomenPerfumes(ListView):
     template_name = 'women_perfumes.html'
 
 
+def recommended_products_anonymous_helper(obj):
+    queryset = ProductReview.objects.all()
+    products = {}
+    for product in obj:
+        stars_splitting = {}
+        count = 0
+        for pr in queryset:
+            if pr.product == product:
+                if product not in products.keys():
+                    products[product] = pr.stars
+                else:
+                    products[product] = products[product] + pr.stars
+                count += 1
+        if count != 0:
+            average_stars = float(products[product]) / count
+            frazione, intero = math.modf(average_stars)
+            stars_splitting['intero'] = intero
+            stars_splitting['frazione'] = frazione
+            products[product] = stars_splitting
+            if intero < 3:
+                del products[product]
+
+    return products
+
+
 def recommended_products_view(request):
-    model = ProductReview
+
+    if request.user.is_authenticated:
+        customer_orders = CustomerOrders.objects.filter(user=request.user)
+        if customer_orders:
+            final_products = []
+            final_products2 = []
+            for order in customer_orders:
+                brand = order.product.brand
+                prezzo = order.product.price
+                queryset = Product.objects.filter(brand=brand, price__lte=prezzo+50, price__gte=prezzo-50)
+                final_products.append(queryset)
+
+            for i in final_products:
+                for x in i:
+                    if x not in final_products2:
+                        final_products2.append(x)
+
+            context = {'products': recommended_products_anonymous_helper(final_products2)}
+
+            return render(request, 'recommended_products.html', context)
+        else:
+            context = {'products': recommended_products_anonymous_helper(Product.objects.all())}
+    else:
+        context = {'products': recommended_products_anonymous_helper(Product.objects.all())}
     template_name = 'recommended_products.html'
-    # products = ProductReview.objects.all()
-    # star_list = []
-    # for item in products:
-    # for item.stars in products:
-    # total = 0
-    # total = (total+item.stars)/2
-    # star_list.append(total)
-    #  total_score = total_score + item.stars
-    #  dict_total_score = [].append(total_score)
-    queryset = ProductReview.objects.order_by('-stars')[:5]
-    context = {'queryset': queryset}
     return render(request, template_name, context)
+

@@ -22,8 +22,7 @@ class ProfileForm(forms.ModelForm):
 
 def form_validation_error(form):
     """
-    Form Validation Error
-    If any error happened in your form, this function returns the error message.
+    Form Validation Error: per qualsiasi errore che succede al form, questa funzione restituisce un messaggio d'errore
     """
     msg = ""
     for field in form:

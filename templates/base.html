@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet"  href="{%  static  'css/bootstrap.css'  %}">
     <link rel="stylesheet"  href="{%  static  'css/bootstrap-grid.css'  %}">
     <link rel="stylesheet"  href="{%  static  'css/bootstrap-reboot.css'  %}">
@@ -52,7 +53,6 @@
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search for...</a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{% url 'Store:brand-list' %}">Brand</a>
                   <a class="dropdown-item" href="{% url 'Store:price' %}">Price</a>
                   <a class="dropdown-item" href="{% url 'Store:men-perfumes' %}">Men's perfumes</a>
                   <a class="dropdown-item" href="{% url 'Store:women-perfumes' %}">Women's perfumes</a>

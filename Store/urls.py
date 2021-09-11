@@ -17,7 +17,6 @@ urlpatterns = [
     path('search_bar/', views.SearchBar, name='SearchBar'),
     path('search_bar/<int:pk>/products_list/', ProductList.as_view(), name='ProductList'),
     path('review_added/<int:id>', views.product_review, name='ProductReview'),
-    path('brand/', BrandList.as_view(), name='brand-list'),
     path('price/', views.price, name='price'),
     path('ajax_filter_price/', views.filter_price, name='filter-price'),
     path('men_perfumes/', MenPerfumes.as_view(), name='men-perfumes'),
@@ -25,7 +24,7 @@ urlpatterns = [
     path('recommended_products/', views.recommended_products_view, name='recommended-products'),
 ]
 
-# to support and show media & static files in developer mode
+# per mostrare file multimediali e statici
 if settings.DEVEL:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

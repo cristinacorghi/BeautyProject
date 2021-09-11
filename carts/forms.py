@@ -5,10 +5,16 @@ from crispy_forms.layout import Submit, Layout, Row, Column
 from crispy_forms.bootstrap import FormActions
 
 
+# form di pagamento
 class CustomerPaymentForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=255)
+    last_name = forms.CharField(max_length=255)
+    email = forms.EmailField()
+
     class Meta:
         model = CustomerPayment
-        fields = "__all__"
+        fields = '__all__'
+        exclude = ['user']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -3,11 +3,12 @@ from django.urls import reverse
 from Store.models.productModel import Product
 from .forms import CustomerPaymentForm
 from .models import *
+from Store.models.productModel import CustomerOrders
 
 
 def cart_view(request):
     try:
-        the_id = request.session['cart_id']
+        the_id = request.session['cart_id']  # prende l'id del profumo
         cart = Cart.objects.get(id=the_id)
     except:
         the_id = None
@@ -19,11 +20,11 @@ def cart_view(request):
     else:
         new_total = 0.00  # prezzo totale
         for item in cart.cartitem_set.all():
-            line_total = float(item.product.price) * item.quantity
+            line_total = float(item.product.price) * item.quantity  # prezzo * quantità
             new_total += line_total
 
         request.session['items_total'] = cart.cartitem_set.count()
-        cart.total = new_total
+        cart.total = new_total  # prezzo totale
         cart.save()
         context = {"cart": cart}
 
@@ -32,9 +33,6 @@ def cart_view(request):
 
 
 def add_to_cart(request, pk):
-    # Imposta l'ora di scadenza per la sessione. In questo caso, la sessione scade dopo 120000 secondi di
-    # inattività.
-    request.session.set_expiry(120000)
     try:
         the_id = request.session['cart_id']
     except:
@@ -53,18 +51,15 @@ def add_to_cart(request, pk):
         pass
 
     if request.method == 'POST':
-        qty = request.POST['qty']
+        qty = request.POST['qty']  # quantità aggiunta al carello del singolo profumo
         for item in request.POST:
             key = item
             val = request.POST[key]
 
-        # ("model object", "true/false")
         cart_item = CartItem.objects.create(cart=cart, product=product)
 
         cart_item.quantity = qty
         cart_item.save()
-
-        # request.session['item'] = cart_item.id
 
         return HttpResponseRedirect(reverse("carts:cart_view"))
 
@@ -86,18 +81,21 @@ def remove_from_cart(request, id):
 
 def customer_payment(request):
     if request.method == 'POST':
-        form = CustomerPaymentForm(request.POST)
-
+        form = CustomerPaymentForm(request.POST, instance=request.user)
         if not form.is_valid():
-            return render(request, 'payment.html', {'form': form})
 
+            return render(request, 'payment.html', {'form': form})
         else:
             form.save()
             cartitem = CartItem.objects.all()
-            cartitem.delete()
+            for item in cartitem:
+                orderdetail = CustomerOrders(user=request.user, product=item.product)
+                orderdetail.save()
+            cartitem.delete()  # quando procedo al pagamento il carrello torna vuoto
             request.session['items_total'] = 0
             template = "success_payment.html"
             context = {"empty": True, 'form': form, 'cartitem': cartitem}
+
             return render(request, template, context)
 
     form = CustomerPaymentForm()

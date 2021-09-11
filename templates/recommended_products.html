@@ -1,12 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <center>
-    <h1>Your favorite perfumes</h1>
-    {% for x in queryset %}
-        <a>{{ x.product.name }} - {% if x.product.get_rating == 0 %}0.0{% else %}
-            {{ x.product.get_rating|floatformat:1 }}{% endif %}</a><br>
-        <img src="../../../{{ x.product.image }}" /> <br>
-    {% endfor %}
-    </center>
+    <div class="row" style="padding-left: 10rem">
+        {% for key, value in products.items %}
+            <div class="col-4">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="../../../{{ key.image }}" alt="Card image cap">
+                    <div class="card-body">
+                        <a href="{% url 'Store:ProductList' key.id %}"><h5 class="card-title">{{ key.name }}</h5></a>
+                        {% with ''|center:value.intero as range %}
+                            {% for _ in range %}
+                                 <i class="bi bi-star-fill"></i>
+                            {% endfor %}
+                        {% endwith %}
+                        {% if value.frazione %}
+                            <i class="bi bi-star-half"></i>
+                        {% endif %}
+                        <p class="card-text">{{ key.description }}</p>
+                        <!--<a href="#" class="btn btn-primary"></a>-->
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

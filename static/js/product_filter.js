@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	// Product Filter Start
+	// Product filter start
 	// # = id
 	$("#priceFilterBtn").on('click',function(){
 		var _filterObj={};
