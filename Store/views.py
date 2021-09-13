@@ -24,6 +24,10 @@ from django.utils.decorators import method_decorator
 import math
 
 
+def Base(request):
+    return render(request, 'homepage.html')
+
+
 # log in
 def login_view(request):
     next = request.GET.get('next')
@@ -158,23 +162,23 @@ class WomenPerfumes(ListView):
 def recommended_products_anonymous_helper(obj):
     queryset = ProductReview.objects.all()
     products = {}
-    for product in obj:
+    for product in obj:  # per ogni profumo in "profumi_finali"
         stars_splitting = {}
-        count = 0
-        for pr in queryset:
-            if pr.product == product:
-                if product not in products.keys():
-                    products[product] = pr.stars
+        count = 0  # serve per contare il numero di recensioni presenti in un profumo
+        for recensione in queryset:  # per ogni recensione
+            if recensione.product == product:  # se il profumo in queryset è uguale al profumo in "profumi_finali"
+                if product not in products.keys():  # se il profumo in "profumi_finali" non è nel dizionario "products"
+                    products[product] = recensione.stars  # il dizionario "products" con chiave "product" prende come valore il numero di stelle della singola recensione
                 else:
-                    products[product] = products[product] + pr.stars
+                    products[product] = products[product] + recensione.stars  # aggiungo il valore dell'altra recensione
                 count += 1
         if count != 0:
-            average_stars = float(products[product]) / count
-            frazione, intero = math.modf(average_stars)
+            average_stars = float(products[product]) / count  # calcolo la media totale delle recensioni per quel profumo
+            frazione, intero = math.modf(average_stars)  # separo la parte frazionaria dall'intero
             stars_splitting['intero'] = intero
             stars_splitting['frazione'] = frazione
-            products[product] = stars_splitting
-            if intero < 3:
+            products[product] = stars_splitting  # ora "products" avrà come chiave il profumo e come valore "stars_splitting" (es: {'intero': 4.0, 'frazione': 0.0})
+            if intero < 3:  # elimino tutti i profumi < 3 stelle
                 del products[product]
 
     return products
@@ -184,27 +188,29 @@ def recommended_products_view(request):
 
     if request.user.is_authenticated:
         customer_orders = CustomerOrders.objects.filter(user=request.user)
-        if customer_orders:
-            final_products = []
-            final_products2 = []
-            for order in customer_orders:
-                brand = order.product.brand
-                prezzo = order.product.price
+        if customer_orders:  # se l'utente ha effettuato un ordine
+            profumi_con_ripetizione = []
+            profumi_finali = []
+            for order in customer_orders:  # per tutti gli ordini che l'utente ha effettuato
+                brand = order.product.brand  # prendo il brand
+                prezzo = order.product.price  # prendo il prezzo
+                # queryset filtra tutti i profumi presenti nel database per brand=brand degli ordini, e prezzo compreso tra -50 e + 50 rispetto al prezzo totale dell'ordine
                 queryset = Product.objects.filter(brand=brand, price__lte=prezzo+50, price__gte=prezzo-50)
-                final_products.append(queryset)
+                profumi_con_ripetizione.append(queryset)  # lista che contiene tutti i profumi filtrati in base al profumo acquistato
 
-            for i in final_products:
-                for x in i:
-                    if x not in final_products2:
-                        final_products2.append(x)
+            # questo ciclo innestato permette che per ogni lista di prodotti consigliati per ogni profumo acquistato,
+            # aggiunge a "profumi_finali" tutti i profumi di "profumi_con_ripetizione" tranne quelli che si ripetono
+            for perfume in profumi_con_ripetizione:
+                for x in perfume:
+                    if x not in profumi_finali:
+                        profumi_finali.append(x)
 
-            context = {'products': recommended_products_anonymous_helper(final_products2)}
+            context = {'products': recommended_products_anonymous_helper(profumi_finali)}
 
             return render(request, 'recommended_products.html', context)
-        else:
+        else:  # se l'utente non ha effettuato alcun ordine, allora viene mostrata una lista di profumi con le recensioni più alte
             context = {'products': recommended_products_anonymous_helper(Product.objects.all())}
     else:
         context = {'products': recommended_products_anonymous_helper(Product.objects.all())}
     template_name = 'recommended_products.html'
     return render(request, template_name, context)
-
