@@ -97,7 +97,7 @@ def logout_view(request):
 
 
 # search bar
-def SearchBar(request):
+def search_bar(request):
     if request.method == 'POST':
         searched = request.POST['searched']
         venues = Product.objects.filter(name__contains=searched)

@@ -56,10 +56,16 @@ def add_to_cart(request, pk):
             key = item
             val = request.POST[key]
 
-        cart_item = CartItem.objects.create(cart=cart, product=product)
-
-        cart_item.quantity = qty
-        cart_item.save()
+        if product.quantity >= int(qty):
+            qty_rimasta = product.quantity - int(qty)
+            cart_item = CartItem.objects.create(cart=cart, product=product)
+            cart_item.quantity = int(qty)
+            cart_item.save()
+        else:
+            quantità = product.quantity
+            name = product.name
+            context = {'quantità': quantità, 'name': name}
+            return render(request, 'finished_perfumes.html', context)
 
         return HttpResponseRedirect(reverse("carts:cart_view"))
 
@@ -83,14 +89,20 @@ def customer_payment(request):
     if request.method == 'POST':
         form = CustomerPaymentForm(request.POST, instance=request.user)
         if not form.is_valid():
-
             return render(request, 'payment.html', {'form': form})
         else:
             form.save()
+            product = Product.objects.all()
             cartitem = CartItem.objects.all()
+            prodotto = CartItem.objects.get(product_id__in=product)
+            agg = Product.objects.get(id=prodotto.product_id)
+
             for item in cartitem:
                 orderdetail = CustomerOrders(user=request.user, product=item.product)
                 orderdetail.save()
+                qty_rimasta = agg.quantity - item.quantity
+                agg = Product.objects.filter(id=item.product_id).update(quantity=qty_rimasta)
+
             cartitem.delete()  # quando procedo al pagamento il carrello torna vuoto
             request.session['items_total'] = 0
             template = "success_payment.html"

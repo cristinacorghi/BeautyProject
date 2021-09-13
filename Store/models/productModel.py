@@ -10,6 +10,7 @@ class Product(models.Model):
     brand = models.CharField(max_length=50, default='')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     description = models.CharField(max_length=500, default='')
+    quantity = models.IntegerField(default=10)
     image = models.ImageField(upload_to='static/img/products')
 
     class Meta:
