@@ -3,32 +3,34 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.contrib.auth import (
     authenticate,
-    get_user_model,
     login,
     logout,
 )
 from django.views.generic import DetailView, ListView
 from forms.loginForm import UserLoginForm
-from forms.reviewForm import ReviewForm
-from django.contrib.auth.models import User
-from Store.models.productModel import Product, ProductReview, CustomerOrders
+from Store.models.productModel import *
 from django.db.models import Min, Max
 from django.http import JsonResponse
 from django.contrib import messages  # import messages to show flash message
-from forms.profileForm import ProfileForm, \
-    form_validation_error  # import the used form and related function to show errors
+from forms.profileForm import *
 from Store.models.profileModel import Profile
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 import math
+from forms.product_modificationForm import *
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.conf import settings
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 
 def Base(request):
     return render(request, 'homepage.html')
 
 
-# log in
 def login_view(request):
     next = request.GET.get('next')
     title = 'Login'
@@ -44,13 +46,12 @@ def login_view(request):
     return render(request, 'login.html', {'form': form, 'title': title})
 
 
-# sign up
 def register(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('Base')
+            return redirect('Store:Base')
     else:
         form = UserForm()
 
@@ -59,8 +60,8 @@ def register(request):
 
 @method_decorator(login_required(login_url='login'),
                   name='dispatch')  # login_required controlla che l'utente corrente sia loggato.
-                                    # dispatch() → metodo presente in tutte le class-based view che si occupa di
-                                    # gestire le request e le response.
+# dispatch() → metodo presente in tutte le class-based view che si occupa di
+# gestire le request e le response.
 class ProfileView(View):
     profile = None
 
@@ -90,13 +91,11 @@ class ProfileView(View):
         return redirect('Store:profile')
 
 
-# logout
 def logout_view(request):
     logout(request)
     return render(request, 'logout.html')
 
 
-# search bar
 def search_bar(request):
     if request.method == 'POST':
         searched = request.POST['searched']
@@ -106,26 +105,23 @@ def search_bar(request):
         return render(request, 'search_bar.html')
 
 
-# reviews
 def product_review(request, id):
     if request.method == 'POST' and request.user.is_authenticated:
         stars = request.POST.get('stars', 3)
         content = request.POST.get('content', '')
         product = Product.objects.get(id=id)
-        review = ProductReview.objects.create(product=product, user=request.user, stars=stars,
-                                              content=content)
+        review = ProductReviewModel.objects.create(product=product, user=request.user, stars=stars,
+                                                   content=content)
         return render(request, 'review_added.html')
     else:
         return render(request, 'review_added.html')
 
 
-# class-based view dei prodotti
 class ProductList(DetailView):
     model = Product
     template_name = 'products.html'
 
 
-# price
 def price(request):
     minMaxPrice = Product.objects.aggregate(Min('price'),
                                             Max('price'))  # dizionario che contiene il prezzo minimo e massimo tra tutti i profumi
@@ -136,7 +132,6 @@ def price(request):
     return render(request, 'price.html', data)
 
 
-# prezzi filtrati
 def filter_price(request):
     minPrice = request.GET['minPrice']  # prezzo minimo
     maxPrice = request.GET['maxPrice']  # prezzo massimo impostato da interfaccia
@@ -147,20 +142,18 @@ def filter_price(request):
     return JsonResponse({'data': t})
 
 
-# class-based view dei profumi da uomo
 class MenPerfumes(ListView):
     model = Product
     template_name = 'men_perfumes.html'
 
 
-# class-based view dei profumi da donna
 class WomenPerfumes(ListView):
     model = Product
     template_name = 'women_perfumes.html'
 
 
 def recommended_products_anonymous_helper(obj):
-    queryset = ProductReview.objects.all()
+    queryset = ProductReviewModel.objects.all()
     products = {}
     for product in obj:  # per ogni profumo in "profumi_finali"
         stars_splitting = {}
@@ -168,16 +161,19 @@ def recommended_products_anonymous_helper(obj):
         for recensione in queryset:  # per ogni recensione
             if recensione.product == product:  # se il profumo in queryset è uguale al profumo in "profumi_finali"
                 if product not in products.keys():  # se il profumo in "profumi_finali" non è nel dizionario "products"
-                    products[product] = recensione.stars  # il dizionario "products" con chiave "product" prende come valore il numero di stelle della singola recensione
+                    products[
+                        product] = recensione.stars  # il dizionario "products" con chiave "product" prende come valore il numero di stelle della singola recensione
                 else:
                     products[product] = products[product] + recensione.stars  # aggiungo il valore dell'altra recensione
                 count += 1
         if count != 0:
-            average_stars = float(products[product]) / count  # calcolo la media totale delle recensioni per quel profumo
+            average_stars = float(
+                products[product]) / count  # calcolo la media totale delle recensioni per quel profumo
             frazione, intero = math.modf(average_stars)  # separo la parte frazionaria dall'intero
             stars_splitting['intero'] = intero
             stars_splitting['frazione'] = frazione
-            products[product] = stars_splitting  # ora "products" avrà come chiave il profumo e come valore "stars_splitting" (es: {'intero': 4.0, 'frazione': 0.0})
+            products[
+                product] = stars_splitting  # ora "products" avrà come chiave il profumo e come valore "stars_splitting" (es: {'intero': 4.0, 'frazione': 0.0})
             if intero < 3:  # elimino tutti i profumi < 3 stelle
                 del products[product]
 
@@ -185,7 +181,6 @@ def recommended_products_anonymous_helper(obj):
 
 
 def recommended_products_view(request):
-
     if request.user.is_authenticated:
         customer_orders = CustomerOrders.objects.filter(user=request.user)
         if customer_orders:  # se l'utente ha effettuato un ordine
@@ -194,9 +189,10 @@ def recommended_products_view(request):
             for order in customer_orders:  # per tutti gli ordini che l'utente ha effettuato
                 brand = order.product.brand  # prendo il brand
                 prezzo = order.product.price  # prendo il prezzo
-                # queryset filtra tutti i profumi presenti nel database per brand=brand degli ordini, e prezzo compreso tra -50 e + 50 rispetto al prezzo totale dell'ordine
-                queryset = Product.objects.filter(brand=brand, price__lte=prezzo+50, price__gte=prezzo-50)
-                profumi_con_ripetizione.append(queryset)  # lista che contiene tutti i profumi filtrati in base al profumo acquistato
+                # queryset filtra tutti i profumi presenti nel database per brand=brand degli ordini, e prezzo compreso tra -50 e + 50 rispetto al prezzo del profumo
+                queryset = Product.objects.filter(brand=brand, price__lte=prezzo + 50, price__gte=prezzo - 50)
+                profumi_con_ripetizione.append(
+                    queryset)  # lista che contiene tutti i profumi filtrati in base al profumo acquistato
 
             # questo ciclo innestato permette che per ogni lista di prodotti consigliati per ogni profumo acquistato,
             # aggiunge a "profumi_finali" tutti i profumi di "profumi_con_ripetizione" tranne quelli che si ripetono
@@ -214,3 +210,66 @@ def recommended_products_view(request):
         context = {'products': recommended_products_anonymous_helper(Product.objects.all())}
     template_name = 'recommended_products.html'
     return render(request, template_name, context)
+
+
+def lista_prodotti(request):
+    listaProdotti = Product.objects.all()
+    context = {'listaProdotti': listaProdotti}
+    return render(request, 'tabella_prodotti.html', context)
+
+
+def modifica_prodotto(request, pk):
+
+    if request.method == 'POST':
+        modpro = Product.objects.get(pk=pk)
+        form = ModificaProdotto(request.POST)
+        old_qty = modpro.quantity
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            price = form.cleaned_data['price']
+            brand = form.cleaned_data['brand']
+            category = form.cleaned_data['category']
+            description = form.cleaned_data['description']
+            quantity = form.cleaned_data['quantity']
+            modpro = Product.objects.filter(pk=pk).update(name=name, price=price, brand=brand, category=category,
+                                                         description=description, quantity=quantity)
+            if old_qty == 0 and old_qty != quantity:
+                # return HttpResponseRedirect(reverse('Store:send-email', pk))
+                return redirect('Store:send-email', id=pk)
+            return HttpResponseRedirect(reverse('Store:lista-prodotti'))
+
+    else:
+        modpro = Product.objects.filter(pk=pk)
+        form = ModificaProdotto()
+
+    context = {'form': form, 'modpro': modpro}
+    return render(request, 'modifica_tabella_prodotti.html', context)
+
+
+def send_email(request, id):
+    product = Product.objects.get(id=id)
+    MY_ADDRESS = settings.EMAIL_HOST_USER
+    PASSWORD = settings.EMAIL_HOST_PASSWORD
+    s = smtplib.SMTP(host='smtp.gmail.com', port=587)  # set up the SMTP server
+    s.starttls()
+    s.login(MY_ADDRESS, PASSWORD)
+    message = f"Il profumo {product.name} è di nuovo disponibile! :)"
+
+    waiting_list_users = WaitingListModel.objects.filter(product=product.id)
+    for wait in waiting_list_users:
+        user = wait.user
+        msg = MIMEMultipart()  # create a message
+        # setup the parameters of the message
+        msg['From'] = MY_ADDRESS
+        msg['To'] = user.email
+        msg['Subject'] = f"Profumo {product.name} disponibile!"
+        # add in the message body
+        msg.attach(MIMEText(message, 'plain'))
+        # send the message via the server set up earlier.
+        s.send_message(msg)
+        del msg
+
+    # Terminate the SMTP session and close the connection
+    s.quit()
+    WaitingListModel.objects.all().delete()
+    return HttpResponseRedirect(reverse('Store:lista-prodotti'))

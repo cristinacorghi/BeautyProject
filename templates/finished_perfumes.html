@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 align="center">Attention! The remaining perfumes of {{ name }} are {{ quantità }}</h1>
-    <p align="center">return to <a href="{% url 'Store:Base' %}">Homepage</a></p>
+    {% if product.quantity > 0 %}
+        <h1 align="center">Attention! The remaining perfumes of {{ product.name }} are {{ product.quantity }}</h1>
+        <p align="center">return <a href="{% url 'Store:ProductList' product.id %}">back</a></p>
+    {% else %}
+        <h2 align="center">Attention! The perfume {{ product.name }} is gone! We will send you an email when it's back in stock</h2>
+        <p align="center">return to <a href="{% url 'Store:Base' %}">Homepage</a></p>
+    {% endif %}
 {% endblock %}

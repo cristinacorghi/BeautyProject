@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class CartItem(models.Model):
     cart = models.ForeignKey('Cart', null=True, blank=True, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=1)
     # line_total: prezzo totale = prezzo profumo * quantità
     line_total = models.DecimalField(default=1.0, max_digits=1000, decimal_places=2)

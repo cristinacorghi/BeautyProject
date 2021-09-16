@@ -69,6 +69,12 @@
               <a class="nav-link" href="{% url 'Store:recommended-products' %}" role="button" aria-haspopup="true"
                  aria-expanded="false">Our suggestions</a>
             </li>
+          {% if user.is_staff %}
+            <li>
+              <a class="nav-link" href="{% url 'Store:lista-prodotti' %}" role="button" aria-haspopup="true"
+                 aria-expanded="false">Manage Products</a>
+            </li>
+          {% endif %}
         </ul>
 
         <form class="form-inline my-2 my-lg-0" method=POST action="{% url 'Store:SearchBar' %}">

@@ -5,7 +5,6 @@ from crispy_forms.layout import Submit, Layout, Row, Column
 from crispy_forms.bootstrap import FormActions
 
 
-# form di pagamento
 class CustomerPaymentForm(forms.ModelForm):
     first_name = forms.CharField(max_length=255)
     last_name = forms.CharField(max_length=255)

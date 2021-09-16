@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_staff %}
+    <div class="col-sm-8 col-sm-offset-2">
+            <table class="table">
+                <thead>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    {% for prodotti in listaProdotti %}
+                    <tr>
+                        <td>{{ prodotti.id }}</td>
+                        <td>{{ prodotti.name }}</td>
+                        <td>{{ prodotti.price }}</td>
+                        <td>{{ prodotti.brand }}</td>
+                        <td>{{ prodotti.category }}</td>
+                        <td>{{ prodotti.description }}</td>
+                        <td>{{ prodotti.quantity }}</td>
+                        <td>
+                          <div class="btn-group project-list-action">
+                            <a href="{% url 'Store:modifica-prodotto' prodotti.pk %}"><button class="btn btn-white btn-xs"><i class="fa fa-pencil">Modifica</i></button></a>
+                        </div>
+                      </td>
+                  </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+    </div>
+{% endif %}
+{% endblock %}

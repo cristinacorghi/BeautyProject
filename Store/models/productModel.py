@@ -8,10 +8,10 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     price = models.IntegerField(default=0)
     brand = models.CharField(max_length=50, default='')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     description = models.CharField(max_length=500, default='')
     quantity = models.IntegerField(default=10)
-    image = models.ImageField(upload_to='static/img/products')
+    image = models.ImageField(upload_to='static/img/products', blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Product'
@@ -28,9 +28,9 @@ class Product(models.Model):
             return 0
 
 
-class ProductReview(models.Model):
+class ProductReviewModel(models.Model):
     product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='reviews', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='reviews', on_delete=models.CASCADE, null=True)
     content = models.TextField(blank=True, null=True)
     stars = models.IntegerField()
     date_added = models.DateTimeField(default=timezone.now)
@@ -45,3 +45,11 @@ class CustomerOrders(models.Model):
 
     class Meta:
         verbose_name_plural = 'CustomerOrders'
+
+
+class WaitingListModel(models.Model):
+    product = models.ForeignKey(Product, related_name='product_waiting', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='user_waiting', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = 'WaitingListModel'

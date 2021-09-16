@@ -1,5 +1,4 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from . import views
 from .views import *
 from django.conf.urls.static import static
@@ -23,6 +22,9 @@ urlpatterns = [
     path('men_perfumes/', MenPerfumes.as_view(), name='men-perfumes'),
     path('women_perfumes/', WomenPerfumes.as_view(), name='women-perfumes'),
     path('recommended_products/', views.recommended_products_view, name='recommended-products'),
+    path('lista_prodotti/', views.lista_prodotti, name='lista-prodotti'),
+    path('modifica_prodotto/<int:pk>/', views.modifica_prodotto, name='modifica-prodotto'),
+    path('send_mail/<int:id>/', views.send_email, name='send-email'),
 ]
 
 # per mostrare file multimediali e statici

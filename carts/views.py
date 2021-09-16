@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
-from Store.models.productModel import Product
+import Store.views
+from Store.models.productModel import *
 from .forms import CustomerPaymentForm
 from .models import *
 from Store.models.productModel import CustomerOrders
@@ -51,21 +52,20 @@ def add_to_cart(request, pk):
         pass
 
     if request.method == 'POST':
-        qty = request.POST['qty']  # quantità aggiunta al carello del singolo profumo
-        for item in request.POST:
-            key = item
-            val = request.POST[key]
 
-        if product.quantity >= int(qty):
-            qty_rimasta = product.quantity - int(qty)
-            cart_item = CartItem.objects.create(cart=cart, product=product)
-            cart_item.quantity = int(qty)
-            cart_item.save()
+        if product.quantity == 0:
+            lista_attesa = WaitingListModel.objects.create(product=product, user=request.user)
+            lista_attesa.save()
+            return render(request, 'finished_perfumes.html', {'product': product})
+
+        elif int(request.POST['qty']) > product.quantity:
+            return render(request, 'finished_perfumes.html', {'product': product})
+
         else:
-            quantità = product.quantity
-            name = product.name
-            context = {'quantità': quantità, 'name': name}
-            return render(request, 'finished_perfumes.html', context)
+            qty = request.POST['qty']  # quantità aggiunta al carello del singolo profumo
+            cart_item = CartItem.objects.create(cart=cart, product=product)
+            cart_item.quantity = qty
+            cart_item.save()
 
         return HttpResponseRedirect(reverse("carts:cart_view"))
 
@@ -92,18 +92,16 @@ def customer_payment(request):
             return render(request, 'payment.html', {'form': form})
         else:
             form.save()
-            product = Product.objects.all()
             cartitem = CartItem.objects.all()
-            prodotto = CartItem.objects.get(product_id__in=product)
-            agg = Product.objects.get(id=prodotto.product_id)
-
             for item in cartitem:
                 orderdetail = CustomerOrders(user=request.user, product=item.product)
                 orderdetail.save()
-                qty_rimasta = agg.quantity - item.quantity
-                agg = Product.objects.filter(id=item.product_id).update(quantity=qty_rimasta)
+
+                item.product.quantity -= item.quantity
+                Product.objects.filter(id=item.product.pk).update(quantity=item.product.quantity)  # aggiorno la quantità nel database
 
             cartitem.delete()  # quando procedo al pagamento il carrello torna vuoto
+
             request.session['items_total'] = 0
             template = "success_payment.html"
             context = {"empty": True, 'form': form, 'cartitem': cartitem}

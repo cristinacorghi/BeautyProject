@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models.productModel import Product, ProductReview, CustomerOrders
+from .models.productModel import *
 from .models.categoryModel import Category
 from .models.profileModel import Profile
 
@@ -14,6 +14,7 @@ class AdminCategory(admin.ModelAdmin):
 
 admin.site.register(Product, AdminProduct)
 admin.site.register(Category, AdminCategory)
-admin.site.register(ProductReview)
+admin.site.register(ProductReviewModel)
 admin.site.register(Profile)
 admin.site.register(CustomerOrders)
+admin.site.register(WaitingListModel)

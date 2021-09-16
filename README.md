@@ -7,6 +7,7 @@ Sito web per la vendita di profumi.
   * aggiungere i prodotti al carrello e acquistarli
   * pagina dedicata all'utente con la possibilità di inserire un'immagine del profilo;
   * nel caso in cui un prodotto fosse esaurito, possibilità di ricevere una email per la nuova disponibilità del prodotto.
+* Funzione utente amministratore: è come un utente registrato ma può modificare i prodotti.
 ---
 # Init Project
 'django-admin startproject LaProfumeria'
@@ -19,7 +20,8 @@ Sito web per la vendita di profumi.
 'python3 manage.py runserver'
 
 # Test Project
-
-
+'python3 manage.py test Store'
+'python3 manage.py test carts'
+---
 Versione di Python utilizzata:
 * Python 3.8.10
