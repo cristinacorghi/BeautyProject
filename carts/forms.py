@@ -17,6 +17,8 @@ class CustomerPaymentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # FormHelper è una classe che definisce il comportamento di rendering del modulo. In questo modo si scrive
+        # meno HTML possibile e tutta la logica rimane nei moduli e nei file di visualizzazione.
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.attrs = {

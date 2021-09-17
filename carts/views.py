@@ -98,7 +98,8 @@ def customer_payment(request):
                 orderdetail.save()
 
                 item.product.quantity -= item.quantity
-                Product.objects.filter(id=item.product.pk).update(quantity=item.product.quantity)  # aggiorno la quantità nel database
+                # aggiorno la quantità nel database
+                Product.objects.filter(id=item.product.pk).update(quantity=item.product.quantity)
 
             cartitem.delete()  # quando procedo al pagamento il carrello torna vuoto
 

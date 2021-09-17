@@ -27,10 +27,6 @@ class TestUrls(SimpleTestCase):
         url = reverse('carts:success_payment')
         self.assertEqual(resolve(url).func, success_payment)
 
-    def test_send_mail_url_is_resolves(self):
-        url = reverse('carts:send-email', args=[1])
-        self.assertEqual(resolve(url).func, send_email)
-
 
 class TestModelsCarts(TestCase):
     def setUp(self):

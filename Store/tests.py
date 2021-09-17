@@ -40,9 +40,21 @@ class TestUrls(SimpleTestCase):
         url = reverse('Store:filter-price')
         self.assertEqual(resolve(url).func, filter_price)
 
+    def test_lista_prodotti_url_is_resolves(self):
+        url = reverse('Store:lista-prodotti')
+        self.assertEqual(resolve(url).func, lista_prodotti)
+
     def test_recommended_products_url_is_resolves(self):
         url = reverse('Store:recommended-products')
         self.assertEqual(resolve(url).func, recommended_products_view)
+
+    def test_modifica_prodotto_url_is_resolves(self):
+        url = reverse('Store:modifica-prodotto', args=[1])
+        self.assertEqual(resolve(url).func, modifica_prodotto)
+
+    def test_send_email_url_is_resolves(self):
+        url = reverse('Store:send-email', args=[1])
+        self.assertEqual(resolve(url).func, send_email)
 
 
 # Il client di test è una classe Python che funge da browser Web fittizio, consentendo di testare le visualizzazioni

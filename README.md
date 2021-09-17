@@ -2,11 +2,11 @@
 
 Sito web per la vendita di profumi.
 * Funzione utente anonimo: visualizzare i prodotti disponibili e il relativo prezzo, navigare il sito, leggere le recensioni.
-* Funzione utenti registrati: funzionalità dell'utente anonimo con l'aggiunta di:
+* Funzione utente registrato: funzionalità dell'utente anonimo con l'aggiunta di:
   * poter scrivere le recensioni ai prodotti;
-  * aggiungere i prodotti al carrello e acquistarli
+  * aggiungere i prodotti al carrello e acquistarli;
   * pagina dedicata all'utente con la possibilità di inserire un'immagine del profilo;
-  * nel caso in cui un prodotto fosse esaurito, possibilità di ricevere una email per la nuova disponibilità del prodotto.
+  * nel caso in cui un prodotto fosse esaurito, possibilità di ricevere una email della nuova disponibilità del prodotto.
 * Funzione utente amministratore: è come un utente registrato ma può modificare i prodotti.
 ---
 # Init Project
