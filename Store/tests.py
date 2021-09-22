@@ -10,7 +10,7 @@ class TestUrls(SimpleTestCase):
 
     def test_index_url_is_resolved(self):
         url = reverse('Store:Base')
-        self.assertEqual(resolve(url).func, Base)
+        self.assertEqual(resolve(url).func, base)
 
     def test_login_url_is_resolved(self):
         url = reverse('Store:Accedi')
@@ -42,7 +42,7 @@ class TestUrls(SimpleTestCase):
 
     def test_lista_prodotti_url_is_resolves(self):
         url = reverse('Store:lista-prodotti')
-        self.assertEqual(resolve(url).func, lista_prodotti)
+        self.assertEqual(resolve(url).func, lista_prodotti_amministratore)
 
     def test_recommended_products_url_is_resolves(self):
         url = reverse('Store:recommended-products')

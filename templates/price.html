@@ -9,7 +9,7 @@
         <li class="list-group-item">
             <input type="range" value="{{ minMaxPrice.price__min }}"
                    min={{ minMaxPrice.price__min }} max={{ minMaxPrice.price__max }}
-                   id="rangeInput" oninput="maxPrice.value=this.value">
+                   id="rangeInput" oninput="maxPrice.value=this.value"> <!-- oninput è il valore che ho inserito-->
             <p>{{ minMaxPrice.price__min }}-{{ minMaxPrice.price__max }}</p>
         </li>
         <li class="list-group-item">

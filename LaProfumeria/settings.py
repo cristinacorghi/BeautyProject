@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+# Python Decouple è una libreria che aiuta a separare rigorosamente i parametri delle impostazioni dal
+# codice sorgente. L'idea è semplice: i parametri relativi al progetto vanno direttamente al codice sorgente. I
+# parametri relativi a un'istanza del progetto, vanno in un file di ambiente.
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -131,9 +134,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# Il backend SMTP è la configurazione predefinita ereditata da Django.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# La mail viene inviata utilizzando l'host SMTP e la porta specificati nelle impostazioni EMAIL_HOST e EMAIL_PORT
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
 EMAIL_PORT = 587
+
+# l'impostazione EMAIL_USE_TLS controlla che venga utilizzata una connessione sicura.
+EMAIL_USE_TLS = True
+
+# Le impostazioni EMAIL_HOST_USER e EMAIL_HOST_PASSWORD vengono utilizzate per l'autenticazione al server SMTP
 EMAIL_HOST_USER = 'laprofumeria.notification@gmail.com'
 EMAIL_HOST_PASSWORD = 'tecnologieweb987'

@@ -9,7 +9,7 @@ app_name = 'Store'
 
 urlpatterns = [
 
-    path('', views.Base, name='Base'),
+    path('', views.base, name='Base'),
     path('login/', views.login_view, name='Accedi'),
     path('register/', views.register, name='Registration'),
     path('logout/', views.logout_view, name='Logout'),
@@ -22,7 +22,7 @@ urlpatterns = [
     path('men_perfumes/', MenPerfumes.as_view(), name='men-perfumes'),
     path('women_perfumes/', WomenPerfumes.as_view(), name='women-perfumes'),
     path('recommended_products/', views.recommended_products_view, name='recommended-products'),
-    path('lista_prodotti/', views.lista_prodotti, name='lista-prodotti'),
+    path('lista_prodotti/', views.lista_prodotti_amministratore, name='lista-prodotti'),
     path('modifica_prodotto/<int:pk>/', views.modifica_prodotto, name='modifica-prodotto'),
     path('send_mail/<int:id>/', views.send_email, name='send-email'),
 ]

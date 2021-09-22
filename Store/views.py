@@ -27,7 +27,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
-def Base(request):
+def base(request):
     return render(request, 'homepage.html')
 
 
@@ -60,8 +60,7 @@ def register(request):
 
 @method_decorator(login_required(login_url='login'),
                   name='dispatch')  # login_required controlla che l'utente corrente sia loggato.
-# dispatch() → metodo presente in tutte le class-based view che si occupa di
-# gestire le request e le response.
+# dispatch() → metodo presente in tutte le class-based view che si occupa di gestire le request e le response.
 class ProfileView(View):
     profile = None
 
@@ -84,7 +83,6 @@ class ProfileView(View):
             profile.user.email = form.cleaned_data.get('email')
             profile.phone = form.cleaned_data.get('phone')
             profile.user.save()
-
             messages.success(request, 'Profile saved successfully')
         else:
             messages.error(request, form_validation_error(form))
@@ -98,7 +96,9 @@ def logout_view(request):
 
 def search_bar(request):
     if request.method == 'POST':
+        # prende quello che c'è scritto nella search bar
         searched = request.POST['searched']
+        # query che contiene tutti i profumi con nome "searched"
         venues = Product.objects.filter(name__contains=searched)
         return render(request, 'search_bar.html', {'searched': searched, 'venues': venues})
     else:
@@ -123,8 +123,8 @@ class ProductList(DetailView):
 
 
 def price(request):
-    minMaxPrice = Product.objects.aggregate(Min('price'),
-                                            Max('price'))  # dizionario che contiene il prezzo minimo e massimo tra tutti i profumi
+    # dizionario che contiene il prezzo minimo e massimo tra tutti i profumi
+    minMaxPrice = Product.objects.aggregate(Min('price'), Max('price'))
     allProducts = Product.objects.all().order_by('-id').distinct()  # tutti i profumi ordinati per id decrescente
     allProducts = allProducts.filter(price__gte=minMaxPrice['price__min'])
     allProducts = allProducts.filter(price__lte=minMaxPrice['price__max'])
@@ -135,10 +135,10 @@ def price(request):
 def filter_price(request):
     minPrice = request.GET['minPrice']  # prezzo minimo
     maxPrice = request.GET['maxPrice']  # prezzo massimo impostato da interfaccia
-    filtered_products = Product.objects.filter(price__gte=minPrice).filter(
-        price__lte=maxPrice).distinct()  # tutti i profumi dal prezzo minimo al prezzo massimo
-    t = render_to_string('ajax/filtered_products_price.html',
-                         {'data': filtered_products})  # pagina html di ogni profumo filtrato
+    # tutti i profumi dal prezzo minimo al prezzo massimo
+    filtered_products = Product.objects.filter(price__gte=minPrice).filter(price__lte=maxPrice).distinct()
+    # restituisce tutto l'html in formato stringa
+    t = render_to_string('ajax/filtered_products_price.html', {'data': filtered_products})
     return JsonResponse({'data': t})
 
 
@@ -161,19 +161,21 @@ def recommended_products_anonymous_helper(obj):
         for recensione in queryset:  # per ogni recensione
             if recensione.product == product:  # se il profumo in queryset è uguale al profumo in "profumi_finali"
                 if product not in products.keys():  # se il profumo in "profumi_finali" non è nel dizionario "products"
-                    products[
-                        product] = recensione.stars  # il dizionario "products" con chiave "product" prende come valore il numero di stelle della singola recensione
+                    # il dizionario "products" con chiave "product" prende come valore il numero di stelle della
+                    # singola recensione
+                    products[product] = recensione.stars
                 else:
                     products[product] = products[product] + recensione.stars  # aggiungo il valore dell'altra recensione
                 count += 1
         if count != 0:
-            average_stars = float(
-                products[product]) / count  # calcolo la media totale delle recensioni per quel profumo
+            # calcolo la media totale delle recensioni per quel profumo
+            average_stars = float(products[product]) / count
             frazione, intero = math.modf(average_stars)  # separo la parte frazionaria dall'intero
             stars_splitting['intero'] = intero
             stars_splitting['frazione'] = frazione
-            products[
-                product] = stars_splitting  # ora "products" avrà come chiave il profumo e come valore "stars_splitting" (es: {'intero': 4.0, 'frazione': 0.0})
+            # ora "products" avrà come chiave il profumo e come valore "stars_splitting"
+            # (es: {'intero': 4.0, 'frazione': 0.0})
+            products[product] = stars_splitting
             if intero < 3:  # elimino tutti i profumi < 3 stelle
                 del products[product]
 
@@ -182,17 +184,20 @@ def recommended_products_anonymous_helper(obj):
 
 def recommended_products_view(request):
     if request.user.is_authenticated:
+        # query che filtra gli ordini effettuati da questo utente
         customer_orders = CustomerOrders.objects.filter(user=request.user)
+
         if customer_orders:  # se l'utente ha effettuato un ordine
             profumi_con_ripetizione = []
             profumi_finali = []
             for order in customer_orders:  # per tutti gli ordini che l'utente ha effettuato
                 brand = order.product.brand  # prendo il brand
                 prezzo = order.product.price  # prendo il prezzo
-                # queryset filtra tutti i profumi presenti nel database per brand=brand degli ordini, e prezzo compreso tra -50 e + 50 rispetto al prezzo del profumo
+                # queryset filtra tutti i profumi presenti nel database per brand=brand degli ordini, e prezzo compreso
+                # tra -50 e + 50 rispetto al prezzo del profumo
                 queryset = Product.objects.filter(brand=brand, price__lte=prezzo + 50, price__gte=prezzo - 50)
-                profumi_con_ripetizione.append(
-                    queryset)  # lista che contiene tutti i profumi filtrati in base al profumo acquistato
+                # lista che contiene tutti i profumi filtrati in base al profumo acquistato
+                profumi_con_ripetizione.append(queryset)
 
             # questo ciclo innestato permette che per ogni lista di prodotti consigliati per ogni profumo acquistato,
             # aggiunge a "profumi_finali" tutti i profumi di "profumi_con_ripetizione" tranne quelli che si ripetono
@@ -204,7 +209,10 @@ def recommended_products_view(request):
             context = {'products': recommended_products_anonymous_helper(profumi_finali)}
 
             return render(request, 'recommended_products.html', context)
-        else:  # se l'utente non ha effettuato alcun ordine, allora viene mostrata una lista di profumi con le recensioni più alte
+
+        # se l'utente non ha effettuato alcun ordine, allora viene mostrata una lista di profumi con le recensioni
+        # più alte
+        else:
             context = {'products': recommended_products_anonymous_helper(Product.objects.all())}
     else:
         context = {'products': recommended_products_anonymous_helper(Product.objects.all())}
@@ -212,7 +220,7 @@ def recommended_products_view(request):
     return render(request, template_name, context)
 
 
-def lista_prodotti(request):
+def lista_prodotti_amministratore(request):
     listaProdotti = Product.objects.all()
     context = {'listaProdotti': listaProdotti}
     return render(request, 'tabella_prodotti.html', context)
@@ -232,9 +240,8 @@ def modifica_prodotto(request, pk):
             description = form.cleaned_data['description']
             quantity = form.cleaned_data['quantity']
             modpro = Product.objects.filter(pk=pk).update(name=name, price=price, brand=brand, category=category,
-                                                         description=description, quantity=quantity)
+                                                          description=description, quantity=quantity)
             if old_qty == 0 and old_qty != quantity:
-                # return HttpResponseRedirect(reverse('Store:send-email', pk))
                 return redirect('Store:send-email', id=pk)
             return HttpResponseRedirect(reverse('Store:lista-prodotti'))
 

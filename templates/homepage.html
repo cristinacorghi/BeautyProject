@@ -28,6 +28,7 @@
 
 
     <script>
+        // getElementById cerca nel documento l'elemento con id="prev"
         var prev = document.getElementById("prev");
         var next = document.getElementById("next");
         var thumbnail = document.getElementsByClassName("thumbnail");
@@ -39,10 +40,14 @@
             "static/img/products/Valentino_Women.jpg",
             "static/img/products/Valentino_Eau_de_Parfum_uomo.jpg"];
         let i=0;
+        // quando clicco sulla freccia next viene eseguita questa funzione
         next.onclick = function () {
             if (i < 4) {
+                // imposta la successiva immagine di sfondo
                 hero.style.backgroundImage = 'url("' + backgroundImg[i + 1] + '")';
+                // aggiunge il bordo nero alla nuova immagine
                 thumbnail[i+1].classList.add("active");
+                // rimuove il bordo nero da quella precedente
                 thumbnail[i].classList.remove("active");
                 i++;
             }
